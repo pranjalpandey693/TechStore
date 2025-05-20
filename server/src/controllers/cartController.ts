@@ -8,7 +8,8 @@ export const getCart = async(req:Request,res:Response)=>{
     try {
         const cart : RedisCart = await getCartFormRedis(userId)
         if(!cart){
-            return res.status(404).json({message: "Cart not found "})
+            res.status(404).json({message: "Cart not found "})
+            return
         }
         res.json(cart)
     } catch (error) {

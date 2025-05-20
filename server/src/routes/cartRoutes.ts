@@ -4,10 +4,10 @@ import { authenticate } from "../middleware"
 
 const router = express.Router()
 
+router.get("/:userId",authenticate,getCart)
 router.post("/add",authenticate,addToCart)
 router.delete("/remove/:productId",authenticate,removeFromCart)
 router.post("/checkout",authenticate,checkoutCart)
-router.get("/:userid",authenticate,getCart)
 
 
 export default router
