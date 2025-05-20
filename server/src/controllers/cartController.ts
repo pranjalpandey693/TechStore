@@ -54,12 +54,14 @@ export const updateCart = async (req:Request,res:Response)=>{
      try {
         const cart : RedisCart = await getCartFormRedis(userId)
         if(!cart){
-            return res.status(404).json({message: "Cart not found "})
+             res.status(404).json({message: "Cart not found "})
+             return
         }
 
         const item = cart.products.find((p)=>p.product===productId)
         if(!item){
-            return res.status(404).json({message: "Product not found in Cart "})
+             res.status(404).json({message: "Product not found in Cart "})
+             return
         }
 
         item.quantity = quantity
@@ -108,11 +110,12 @@ export const checkoutCart = async (req:Request,res:Response) =>{
 }
 
 export const clearCart = async(req:Request,res:Response)=>{
-    const {userId} = req.body
+    const {userId} = req.params
     try {
         const cart : RedisCart = await getCartFormRedis(userId)
         if(!cart){
-            return res.status(404).json({message: "Cart not found "})
+             res.status(404).json({message: "Cart not found "})
+             return
         }
         cart.products = []
         await saveCartRedis(userId,cart)
