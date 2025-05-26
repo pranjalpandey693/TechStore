@@ -8,8 +8,12 @@ interface AuthRequest extends Request {
 }
 
 
-export const getCart = async(req:Request,res:Response)=>{
-    const {userId} = req.params
+export const getCart = async(req:AuthRequest,res:Response)=>{
+    const userId = req.user?._id?.toString()
+    if (!userId) {
+        res.status(400).json({ message: "User ID is required" });
+        return
+      }
     try {
         const cart : RedisCart = await getCartFormRedis(userId)
         if(!cart){
@@ -56,7 +60,7 @@ export const addToCart = async(req:AuthRequest,res:Response)=>{
        }
 
         await saveCartRedis(userId,updatedCart)
-        res.json({message:"Product added to cart",cart})
+        res.json({message:"Product added to cart",updatedCart})
         
     } catch (error) {
         res.status(500).json({ error: (error as Error).message })
@@ -95,7 +99,7 @@ export const updateCart = async (req:Request,res:Response)=>{
 
         await saveCartRedis(userId,updatedCart)
 
-        res.json({message:"Cart item updated", cart})
+        res.json({message:"Cart item updated", updatedCart})
     } catch (error) {
         res.status(500).json({error: (error as Error).message })
     }
@@ -103,8 +107,12 @@ export const updateCart = async (req:Request,res:Response)=>{
 
 }
 
-export const removeFromCart = async (req:Request,res:Response)=>{
-    const {userId}= req.body
+export const removeFromCart = async (req:AuthRequest,res:Response)=>{
+    const userId = req.user?._id?.toString()
+    if (!userId) {
+        res.status(400).json({ message: "User ID is required" });
+        return
+      }
     const {productId}= req.params
 
     try {
@@ -136,8 +144,12 @@ export const checkoutCart = async (req:Request,res:Response) =>{
     }
 }
 
-export const clearCart = async(req:Request,res:Response)=>{
-    const {userId} = req.params
+export const clearCart = async(req:AuthRequest,res:Response)=>{
+    const userId = req.user?._id?.toString()
+    if (!userId) {
+        res.status(400).json({ message: "User ID is required" });
+        return
+      }
     try {
         const cart : RedisCart = await getCartFormRedis(userId)
         if(!cart){

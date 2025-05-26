@@ -4,11 +4,11 @@ import { authenticate } from "../middleware"
 
 const router = express.Router()
 
-router.get("/:userId",authenticate,getCart)
+router.get("/",authenticate,getCart)
 router.post("/add",authenticate,addToCart)
 router.delete("/remove/:productId",authenticate,removeFromCart)
 router.post("/checkout",authenticate,checkoutCart)
-router.delete("/clear/:userId",authenticate,clearCart)
+router.delete("/clear",authenticate,clearCart)
 router.patch("/update/:productId",authenticate,updateCart)
 
 
