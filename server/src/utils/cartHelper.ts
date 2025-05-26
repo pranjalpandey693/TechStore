@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { CART_ITEM_STATUS, RedisCart,RedisCartItem } from "../interfaces";
 import { Cart } from "../models";
 import redisClient from "./redisClient";
-import cartModel from "../models/cartModel";
+
 
 const CART_EXPIRATION = 60 * 60 * 24 
 
@@ -18,7 +18,7 @@ export const getCartFormRedis = async (userId:string)=>{
         return JSON.parse(cartData)
     }
 
-    const mongoCart = await cartModel.findOne({userId})
+    const mongoCart = await Cart.findOne({userId})
     if(mongoCart){
         await redisClient.set(redisKey,JSON.stringify(mongoCart))
         return mongoCart
@@ -51,16 +51,28 @@ export const syncCartToMongoDB = async (userId:string) =>{
             status: item.status as CART_ITEM_STATUS
 
         }))
+        const totalCartPrice = formattedProducts.reduce((sum,item)=> sum+item.totalprice,0)
         const existingCart = await Cart.findOne({user: userId})
+       
         if(existingCart){
             existingCart.products = formattedProducts 
+            existingCart.totalCartPrice = totalCartPrice
             existingCart.updated = new Date()
             await existingCart.save()
+           
         } else {
 
-            await new Cart({user:userId,products:formattedProducts}).save()
+            await new Cart({
+                user:userId,
+                products:formattedProducts,
+                totalCartPrice,
+                created: new Date(),
+                updated: new Date(),
+        
+            }).save()
+           
         }
-        await deleteCartFromRedis(userId)
+       await deleteCartFromRedis(userId)
         console.log(`Cart synced to Mongodb for user: ${userId}`);
     } catch (error) {
         console.log("error syncing cart to Mongodb:",error);

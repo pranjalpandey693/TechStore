@@ -1,7 +1,8 @@
 import { Request,Response } from "express"
-import { getCartFormRedis, saveCartRedis, syncCartToMongoDB } from "../utils"
+import { deleteCartFromRedis, getCartFormRedis, saveCartRedis, syncCartToMongoDB } from "../utils"
 import { CART_ITEM_STATUS, IUser, RedisCart,RedisCartItem } from "../interfaces"
 import { Document } from "mongoose"
+import { Cart } from "../models"
 
 interface AuthRequest extends Request {
     user?: IUser & Document
@@ -160,13 +161,15 @@ export const clearCart = async(req:AuthRequest,res:Response)=>{
       }
     try {
         const cart : RedisCart = await getCartFormRedis(userId)
-        if(!cart){
+        const mongoCart = await Cart.findOne({user:userId})
+        if(!cart && !mongoCart){
              res.status(404).json({message: "Cart not found "})
              return
         }
-        cart.products = []
-        await saveCartRedis(userId,cart)
-
+       
+        await deleteCartFromRedis(userId)
+        await Cart.deleteMany({ user: userId });
+        
         res.json({message:"Cart cleared", cart})
     } catch (error) {
         res.status(500).json({error: (error as Error).message })
