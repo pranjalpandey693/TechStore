@@ -67,8 +67,12 @@ export const addToCart = async(req:AuthRequest,res:Response)=>{
     }
 }
 
-export const updateCart = async (req:Request,res:Response)=>{
-     const {userId } = req.body
+export const updateCart = async (req:AuthRequest,res:Response)=>{
+    const userId = req.user?._id?.toString()
+    if (!userId) {
+        res.status(400).json({ message: "User ID is required" });
+        return
+      }
      const {productId} = req.params
      const {quantity} = req.body
 
@@ -132,9 +136,13 @@ export const removeFromCart = async (req:AuthRequest,res:Response)=>{
     }
 }
 
-export const checkoutCart = async (req:Request,res:Response) =>{
+export const checkoutCart = async (req:AuthRequest,res:Response) =>{
    
-    const {userId}= req.body
+    const userId = req.user?._id?.toString()
+    if (!userId) {
+        res.status(400).json({ message: "User ID is required" });
+        return
+      }
     try {
         await syncCartToMongoDB(userId)
         res.json({ message: "Cart checked out and saved to DB." })
