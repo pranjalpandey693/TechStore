@@ -1,6 +1,11 @@
 import { Request,Response } from "express"
 import { getCartFormRedis, saveCartRedis, syncCartToMongoDB } from "../utils"
-import { CART_ITEM_STATUS, RedisCart,RedisCartItem } from "../interfaces"
+import { CART_ITEM_STATUS, IUser, RedisCart,RedisCartItem } from "../interfaces"
+import { Document } from "mongoose"
+
+interface AuthRequest extends Request {
+    user?: IUser & Document
+}
 
 
 export const getCart = async(req:Request,res:Response)=>{
@@ -18,8 +23,13 @@ export const getCart = async(req:Request,res:Response)=>{
 }
 
 
-export const addToCart = async(req:Request,res:Response)=>{
-    const {userId} = req.body
+export const addToCart = async(req:AuthRequest,res:Response)=>{
+
+    const userId = req.user?._id?.toString()
+    if (!userId) {
+        res.status(400).json({ message: "User ID is required" });
+        return
+      }
     const {product,quantity,price} = req.body
 
     try {
