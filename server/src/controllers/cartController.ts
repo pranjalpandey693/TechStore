@@ -48,7 +48,14 @@ export const addToCart = async(req:AuthRequest,res:Response)=>{
                 status: CART_ITEM_STATUS.Not_processed
             })
         }
-        await saveCartRedis(userId,cart)
+       const totalCartPrice = cart.products.reduce((acc,item)=> acc+item.totalprice,0)
+
+       const updatedCart = {
+        ...cart,
+       totalCartPrice: totalCartPrice,
+       }
+
+        await saveCartRedis(userId,updatedCart)
         res.json({message:"Product added to cart",cart})
         
     } catch (error) {
@@ -77,7 +84,16 @@ export const updateCart = async (req:Request,res:Response)=>{
         item.quantity = quantity
         item.totalprice = quantity* item.price
 
-        await saveCartRedis(userId,cart)
+        const totalCartPrice = cart.products.reduce((acc,item)=> acc+item.totalprice,0)
+
+       const updatedCart = {
+        ...cart,
+       totalCartPrice: totalCartPrice,
+       }
+
+        
+
+        await saveCartRedis(userId,updatedCart)
 
         res.json({message:"Cart item updated", cart})
     } catch (error) {
@@ -99,6 +115,7 @@ export const removeFromCart = async (req:Request,res:Response)=>{
        }
 
        cart.products = cart.products.filter((p:RedisCartItem)=> p.product!== productId)
+       cart.totalCartPrice = cart.products.reduce((acc,item)=> acc+item.totalprice,0)
        await saveCartRedis(userId,cart)
       
        res.json({message: "Product removed",cart})

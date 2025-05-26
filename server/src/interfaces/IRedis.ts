@@ -7,6 +7,8 @@ export interface RedisCartItem {
 }
 
 export interface RedisCart {
-    products: RedisCartItem[]
+    products: RedisCartItem[],
+    totalCartPrice: Number
+
 }
 

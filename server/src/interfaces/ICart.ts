@@ -21,6 +21,7 @@ export interface CartItem {
 export interface CartDocument extends mongoose.Document {
     user: mongoose.Schema.Types.ObjectId
     products:CartItem[]
+    totalCartPrice:number
     updated: Date
     created: Date
 }

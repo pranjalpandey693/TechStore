@@ -16,6 +16,7 @@ const CartItemSchema = new Schema<CartItem>({
 const CartSchema = new Schema<CartDocument>({
     user:{type:Schema.Types.ObjectId,ref:"user",required:true},
     products: [CartItemSchema],
+    totalCartPrice:{type:Number,default:0},
     updated: {type:Date,default:Date.now},
     created: {type:Date,default:Date.now}
 })
