@@ -1,5 +1,5 @@
 export interface AuthState {
-    user: string,
+    user: string|null,
     token: string | null,
     isAuthenticated :boolean ,
     loading: boolean,
