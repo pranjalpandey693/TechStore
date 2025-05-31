@@ -3,7 +3,6 @@ import type { AuthState } from "@/interfaces";
 
 const initialState :AuthState = {
     user:null,
-    token:null,
     isAuthenticated:false,
     loading:false,
     error:null
@@ -18,9 +17,8 @@ const authSlice = createSlice({
             state.loading= true
             state.error= null
         },
-        setCredentials:(state,action:PayloadAction<{user:string,token:string}>)=>{
+        setCredentials:(state,action:PayloadAction<{user:string}>)=>{
             state.user = action.payload.user
-            state.token = action.payload.token
             state.isAuthenticated=true
             state.loading=false
             state.error=null
@@ -32,7 +30,6 @@ const authSlice = createSlice({
         },
         logout:(state)=>{
             state.user = null
-            state.token = null
             state.isAuthenticated=false
             state.loading=false
             state.error=null
