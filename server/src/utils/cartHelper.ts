@@ -18,7 +18,7 @@ export const getCartFormRedis = async (userId:string)=>{
         return JSON.parse(cartData)
     }
 
-    const mongoCart = await Cart.findOne({userId})
+    const mongoCart = await Cart.findOne({user: userId}).lean()
     if(mongoCart){
         await redisClient.set(redisKey,JSON.stringify(mongoCart))
         return mongoCart
@@ -45,6 +45,7 @@ export const syncCartToMongoDB = async (userId:string) =>{
         
         const formattedProducts = redisCart.products.map((item:RedisCartItem)=>({
             product: new mongoose.Types.ObjectId(item.product), 
+            name: item.name,
             quantity: item.quantity,
             price: item.price,
             totalprice: item.totalprice,

@@ -35,7 +35,7 @@ export const addToCart = async(req:AuthRequest,res:Response)=>{
         res.status(400).json({ message: "User ID is required" });
         return
       }
-    const {product,quantity,price} = req.body
+    const {product,name,quantity,price} = req.body
 
     try {
         let cart:RedisCart = await getCartFormRedis(userId) || {products:[]}
@@ -47,6 +47,7 @@ export const addToCart = async(req:AuthRequest,res:Response)=>{
         } else {
             cart.products.push({
                 product,
+                name,
                 quantity,
                 price,
                 totalprice : quantity*price,
