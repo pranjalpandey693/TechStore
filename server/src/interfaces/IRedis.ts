@@ -11,5 +11,6 @@ export interface RedisCart {
     products: RedisCartItem[],
     totalCartPrice: Number
 
+
 }
 
