@@ -131,8 +131,9 @@ export const removeFromCart = async (req:AuthRequest,res:Response)=>{
        cart.products = cart.products.filter((p:RedisCartItem)=> p.product!== productId)
        cart.totalCartPrice = cart.products.reduce((acc,item)=> acc+item.totalprice,0)
        await saveCartRedis(userId,cart)
+       const updatedCart = cart
       
-       res.json({message: "Product removed",cart})
+       res.json({message: "Product removed",updatedCart})
     } catch (error) {
         res.status(500).json({ error: (error as Error).message })
     }
