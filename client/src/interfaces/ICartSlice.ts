@@ -10,6 +10,7 @@ interface CartState {
     items: CartItem[]
     totalAmount:number
     loading:boolean
+    error:string| null
 }
 
 export type {CartState,CartItem}
