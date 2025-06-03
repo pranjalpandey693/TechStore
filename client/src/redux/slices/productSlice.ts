@@ -1,5 +1,5 @@
 import type { Product, ProductState } from "@/interfaces";
-import { addProduct, deleteProduct, getProducts, getProductsById, updateProduct } from "@/services/productService";
+import {productApiService} from "@/services/productService"
 import { createAsyncThunk, createSlice,  type PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -14,7 +14,7 @@ export const fetchProducts = createAsyncThunk(
     'products/fetchProducts',
     async(_,{rejectWithValue})=>{
         try {
-            const response = await getProducts()
+            const response = await productApiService.getProducts()
             return response.data
         } catch (error :any ) {
           return rejectWithValue(
@@ -27,7 +27,7 @@ export const fetchProductById = createAsyncThunk(
     'products/fetchProductById',
     async(productId:string,{rejectWithValue})=>{
         try {
-            const response = await getProductsById(productId)
+            const response = await productApiService.getProductsById(productId)
             return response.data
         } catch (error :any ) {
           return rejectWithValue(
@@ -47,7 +47,7 @@ export const createProduct = createAsyncThunk(
         image?:File
     },{rejectWithValue})=>{
         try {
-            const response = await addProduct(product)
+            const response = await productApiService.addProduct(product)
             return response.data
         } catch (error :any ) {
           return rejectWithValue(
@@ -68,7 +68,7 @@ export const editProduct = createAsyncThunk(
         }
     },{rejectWithValue})=>{
         try {
-            const response = await updateProduct(productId,updatedFields)
+            const response = await productApiService.updateProduct(productId,updatedFields)
             return response.data
         } catch (error :any ) {
           return rejectWithValue(
@@ -81,7 +81,7 @@ export const removeProduct = createAsyncThunk(
     'products/removeProduct',
     async(productId:string,{rejectWithValue})=>{
         try {
-          const response=  await deleteProduct(productId)
+          const response=  await productApiService.deleteProduct(productId)
             return  response.data
         } catch (error :any ) {
           return rejectWithValue(
