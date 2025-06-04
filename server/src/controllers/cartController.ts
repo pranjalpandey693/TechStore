@@ -171,6 +171,9 @@ export const clearCart = async(req:AuthRequest,res:Response)=>{
        
         await deleteCartFromRedis(userId)
         await Cart.deleteMany({ user: userId });
+
+        cart.products = []
+        cart.totalCartPrice = 0
         
         res.json({message:"Cart cleared", cart})
     } catch (error) {
