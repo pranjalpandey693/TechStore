@@ -174,8 +174,9 @@ export const clearCart = async(req:AuthRequest,res:Response)=>{
 
         cart.products = []
         cart.totalCartPrice = 0
+        const updatedCart = cart
         
-        res.json({message:"Cart cleared", cart})
+        res.json({message:"Cart cleared", updatedCart})
     } catch (error) {
         res.status(500).json({error: (error as Error).message })
     }
