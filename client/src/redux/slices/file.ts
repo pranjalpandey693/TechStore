@@ -140,159 +140,159 @@ export interface CartProduct {
   
   export const cartApiService = new CartApiService();
   
-  // services/socket.service.ts
-  import { io, Socket } from 'socket.io-client';
-  import { SocketCartEvent } from '../types/cart.types';
+//   // services/socket.service.ts
+//   import { io, Socket } from 'socket.io-client';
+//   import { SocketCartEvent } from '../types/cart.types';
   
-  class SocketService {
-    private socket: Socket | null = null;
-    private reconnectAttempts = 0;
-    private maxReconnectAttempts = 5;
+//   class SocketService {
+//     private socket: Socket | null = null;
+//     private reconnectAttempts = 0;
+//     private maxReconnectAttempts = 5;
   
-    connect(userId: string): Socket {
-      if (this.socket?.connected) {
-        return this.socket;
-      }
+//     connect(userId: string): Socket {
+//       if (this.socket?.connected) {
+//         return this.socket;
+//       }
   
-      this.socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001', {
-        auth: { userId },
-        transports: ['websocket', 'polling'],
-        timeout: 10000,
-        retries: 3,
-      });
+//       this.socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001', {
+//         auth: { userId },
+//         transports: ['websocket', 'polling'],
+//         timeout: 10000,
+//         retries: 3,
+//       });
   
-      this.setupEventListeners();
-      return this.socket;
-    }
+//       this.setupEventListeners();
+//       return this.socket;
+//     }
   
-    private setupEventListeners(): void {
-      if (!this.socket) return;
+//     private setupEventListeners(): void {
+//       if (!this.socket) return;
   
-      this.socket.on('connect', () => {
-        console.log('Socket connected:', this.socket?.id);
-        this.reconnectAttempts = 0;
-      });
+//       this.socket.on('connect', () => {
+//         console.log('Socket connected:', this.socket?.id);
+//         this.reconnectAttempts = 0;
+//       });
   
-      this.socket.on('disconnect', (reason) => {
-        console.log('Socket disconnected:', reason);
-        this.handleReconnection();
-      });
+//       this.socket.on('disconnect', (reason) => {
+//         console.log('Socket disconnected:', reason);
+//         this.handleReconnection();
+//       });
   
-      this.socket.on('connect_error', (error) => {
-        console.error('Socket connection error:', error);
-        this.handleReconnection();
-      });
-    }
+//       this.socket.on('connect_error', (error) => {
+//         console.error('Socket connection error:', error);
+//         this.handleReconnection();
+//       });
+//     }
   
-    private handleReconnection(): void {
-      if (this.reconnectAttempts < this.maxReconnectAttempts) {
-        this.reconnectAttempts++;
-        setTimeout(() => {
-          this.socket?.connect();
-        }, Math.pow(2, this.reconnectAttempts) * 1000); // Exponential backoff
-      }
-    }
+//     private handleReconnection(): void {
+//       if (this.reconnectAttempts < this.maxReconnectAttempts) {
+//         this.reconnectAttempts++;
+//         setTimeout(() => {
+//           this.socket?.connect();
+//         }, Math.pow(2, this.reconnectAttempts) * 1000); // Exponential backoff
+//       }
+//     }
   
-    joinCartRoom(cartId: string): void {
-      this.socket?.emit('joinCart', { cartId });
-    }
+//     joinCartRoom(cartId: string): void {
+//       this.socket?.emit('joinCart', { cartId });
+//     }
   
-    leaveCartRoom(cartId: string): void {
-      this.socket?.emit('leaveCart', { cartId });
-    }
+//     leaveCartRoom(cartId: string): void {
+//       this.socket?.emit('leaveCart', { cartId });
+//     }
   
-    onCartUpdated(callback: (event: SocketCartEvent) => void): void {
-      this.socket?.on('cartUpdated', callback);
-    }
+//     onCartUpdated(callback: (event: SocketCartEvent) => void): void {
+//       this.socket?.on('cartUpdated', callback);
+//     }
   
-    onCartSynced(callback: (event: SocketCartEvent) => void): void {
-      this.socket?.on('cartSynced', callback);
-    }
+//     onCartSynced(callback: (event: SocketCartEvent) => void): void {
+//       this.socket?.on('cartSynced', callback);
+//     }
   
-    onCartError(callback: (event: SocketCartEvent) => void): void {
-      this.socket?.on('cartError', callback);
-    }
+//     onCartError(callback: (event: SocketCartEvent) => void): void {
+//       this.socket?.on('cartError', callback);
+//     }
   
-    disconnect(): void {
-      this.socket?.disconnect();
-      this.socket = null;
-    }
+//     disconnect(): void {
+//       this.socket?.disconnect();
+//       this.socket = null;
+//     }
   
-    isConnected(): boolean {
-      return this.socket?.connected || false;
-    }
-  }
+//     isConnected(): boolean {
+//       return this.socket?.connected || false;
+//     }
+//   }
   
-  export const socketService = new SocketService();
+//   export const socketService = new SocketService();
   
   // utils/toast.util.ts
-  import { ToastNotification } from '../types/cart.types';
+//   import { ToastNotification } from '../types/cart.types';
   
-  class ToastManager {
-    private toasts: ToastNotification[] = [];
-    private listeners: Array<(toasts: ToastNotification[]) => void> = [];
+//   class ToastManager {
+//     private toasts: ToastNotification[] = [];
+//     private listeners: Array<(toasts: ToastNotification[]) => void> = [];
   
-    show(toast: Omit<ToastNotification, 'id'>): string {
-      const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      const newToast: ToastNotification = {
-        ...toast,
-        id,
-        duration: toast.duration || 5000,
-      };
+//     show(toast: Omit<ToastNotification, 'id'>): string {
+//       const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+//       const newToast: ToastNotification = {
+//         ...toast,
+//         id,
+//         duration: toast.duration || 5000,
+//       };
   
-      this.toasts.push(newToast);
-      this.notifyListeners();
+//       this.toasts.push(newToast);
+//       this.notifyListeners();
   
-      // Auto-remove toast after duration
-      if (newToast.duration > 0) {
-        setTimeout(() => {
-          this.remove(id);
-        }, newToast.duration);
-      }
+//       // Auto-remove toast after duration
+//       if (newToast.duration > 0) {
+//         setTimeout(() => {
+//           this.remove(id);
+//         }, newToast.duration);
+//       }
   
-      return id;
-    }
+//       return id;
+//     }
   
-    remove(id: string): void {
-      this.toasts = this.toasts.filter(toast => toast.id !== id);
-      this.notifyListeners();
-    }
+//     remove(id: string): void {
+//       this.toasts = this.toasts.filter(toast => toast.id !== id);
+//       this.notifyListeners();
+//     }
   
-    clear(): void {
-      this.toasts = [];
-      this.notifyListeners();
-    }
+//     clear(): void {
+//       this.toasts = [];
+//       this.notifyListeners();
+//     }
   
-    subscribe(listener: (toasts: ToastNotification[]) => void): () => void {
-      this.listeners.push(listener);
-      return () => {
-        this.listeners = this.listeners.filter(l => l !== listener);
-      };
-    }
+//     subscribe(listener: (toasts: ToastNotification[]) => void): () => void {
+//       this.listeners.push(listener);
+//       return () => {
+//         this.listeners = this.listeners.filter(l => l !== listener);
+//       };
+//     }
   
-    private notifyListeners(): void {
-      this.listeners.forEach(listener => listener([...this.toasts]));
-    }
+//     private notifyListeners(): void {
+//       this.listeners.forEach(listener => listener([...this.toasts]));
+//     }
   
-    // Convenience methods
-    success(title: string, message: string): string {
-      return this.show({ type: 'success', title, message });
-    }
+//     // Convenience methods
+//     success(title: string, message: string): string {
+//       return this.show({ type: 'success', title, message });
+//     }
   
-    error(title: string, message: string, duration = 0): string {
-      return this.show({ type: 'error', title, message, duration });
-    }
+//     error(title: string, message: string, duration = 0): string {
+//       return this.show({ type: 'error', title, message, duration });
+//     }
   
-    warning(title: string, message: string): string {
-      return this.show({ type: 'warning', title, message });
-    }
+//     warning(title: string, message: string): string {
+//       return this.show({ type: 'warning', title, message });
+//     }
   
-    info(title: string, message: string): string {
-      return this.show({ type: 'info', title, message });
-    }
-  }
+//     info(title: string, message: string): string {
+//       return this.show({ type: 'info', title, message });
+//     }
+//   }
   
-  export const toastManager = new ToastManager();
+//   export const toastManager = new ToastManager();
   
   // store/cart.slice.ts
   import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
@@ -315,7 +315,7 @@ export interface CartProduct {
   };
   
   // Utility functions
-  const generateOperationId = () => `op-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  //const generateOperationId = () => `op-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   
   const createBackupState = (state: CartState) => ({
     items: [...state.items],
@@ -340,15 +340,15 @@ export interface CartProduct {
     }
   };
   
-  const addToRetryQueue = (state: CartState, operation: Omit<RetryOperation, 'id' | 'attempts' | 'timestamp'>) => {
-    const retryOp: RetryOperation = {
-      ...operation,
-      id: generateOperationId(),
-      attempts: 0,
-      timestamp: Date.now(),
-    };
-    state.retryQueue.push(retryOp);
-  };
+//   const addToRetryQueue = (state: CartState, operation: Omit<RetryOperation, 'id' | 'attempts' | 'timestamp'>) => {
+//     const retryOp: RetryOperation = {
+//       ...operation,
+//       id: generateOperationId(),
+//       attempts: 0,
+//       timestamp: Date.now(),
+//     };
+//     state.retryQueue.push(retryOp);
+//   };
   
   // Async thunks
   export const initializeCart = createAsyncThunk<
@@ -492,40 +492,40 @@ export interface CartProduct {
     }
   );
   
-  export const retryFailedOperations = createAsyncThunk<
-    void,
-    void,
-    { state: { cart: CartState } }
-  >(
-    'cart/retryOperations',
-    async (_, { getState, dispatch }) => {
-      const { cart } = getState();
-      const operationsToRetry = cart.retryQueue.filter(
-        op => op.attempts < cart.maxRetries
-      );
+  // export const retryFailedOperations = createAsyncThunk<
+  //   void,
+  //   void,
+  //   { state: { cart: CartState } }
+  // >(
+  //   'cart/retryOperations',
+  //   async (_, { getState, dispatch }) => {
+  //     const { cart } = getState();
+  //     const operationsToRetry = cart.retryQueue.filter(
+  //       op => op.attempts < cart.maxRetries
+  //     );
   
-      for (const operation of operationsToRetry) {
-        try {
-          switch (operation.type) {
-            case 'add':
-              await dispatch(addItemToCart(operation.payload)).unwrap();
-              break;
-            case 'remove':
-              await dispatch(removeItemFromCart(operation.payload)).unwrap();
-              break;
-            case 'update':
-              await dispatch(updateItemQuantity(operation.payload)).unwrap();
-              break;
-            case 'clear':
-              await dispatch(clearCart(operation.payload)).unwrap();
-              break;
-          }
-        } catch (error) {
-          // Will be handled by individual thunk rejections
-        }
-      }
-    }   
-  );
+  //     for (const operation of operationsToRetry) {
+  //       try {
+  //         switch (operation.type) {
+  //           case 'add':
+  //             await dispatch(addItemToCart(operation.payload)).unwrap();
+  //             break;
+  //           case 'remove':
+  //             await dispatch(removeItemFromCart(operation.payload)).unwrap();
+  //             break;
+  //           case 'update':
+  //             await dispatch(updateItemQuantity(operation.payload)).unwrap();
+  //             break;
+  //           case 'clear':
+  //             await dispatch(clearCart(operation.payload)).unwrap();
+  //             break;
+  //         }
+  //       } catch (error) {
+  //         // Will be handled by individual thunk rejections
+  //       }
+  //     }
+  //   }   
+  // );
   
   // Optimistic update helpers
   const applyOptimisticAdd = (state: CartState, productId: string, quantity: number, estimatedPrice = 0) => {

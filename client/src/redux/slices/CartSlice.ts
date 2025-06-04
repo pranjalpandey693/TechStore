@@ -1,6 +1,7 @@
-import type { CartItem, CartState } from "@/interfaces";
-import { addToCart, checkout, clearCart, deleteFromCart, getCart, updateCart } from "@/services/cartService";
+import type { CartItem, CartState, ServerCartResponse } from "@/interfaces";
+import { cartApiService} from "@/services/cartService";
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { toast } from "sonner";
 
 
 
@@ -11,12 +12,32 @@ const initialState:CartState = {
     error:null,
 }
 
+const createBackupstate = (state:CartState)=>({
+    items:[...state.items],
+    totalAmount: state.totalAmount
+    
+})
+
+const applyServerResponse = (state:CartState,payload:ServerCartResponse)=>{
+    if(payload.updatedCart){
+        state.items = payload.updatedCart.products
+        state.totalAmount= payload.updatedCart.totalCartPrice
+    }
+}
+
+const restoreFromBackup = (state:CartState)=>{
+    if(state.previousState){
+        state.items= state.previousState.item
+        state.totalAmount = state.previousState.totalAmount
+        delete state.previousState
+    }
+}
 
 export const fetchCart = createAsyncThunk(
     'cart/fetchCart',
     async(_,{rejectWithValue})=>{
         try {
-            const response = await getCart()
+            const response = await cartApiService.getCart()
             return response.data
         } catch (error:any) {
             return rejectWithValue(
@@ -34,9 +55,11 @@ export const addItemCart = createAsyncThunk(
         price:number
     },{rejectWithValue})=>{
         try {
-            const response = await addToCart(item)
+            const response = await cartApiService.addToCart(item)
+            toast.success('Item Added')
             return response.data
         } catch (error:any) {
+            toast.error('Add Item Failed')
             return rejectWithValue(
                 error.response?.data?.message || "Failed to add to item cart"
             )
@@ -47,9 +70,11 @@ export const removeItemCart = createAsyncThunk(
     'cart/removeItemCart',
     async(productId:string,{rejectWithValue})=>{
         try {
-           await deleteFromCart(productId)
-            return productId
+           await cartApiService.deleteFromCart(productId)
+           toast.success('Item Removed')
+             return productId
         } catch (error:any) {
+            toast.error('Remove Item Failed')
             return rejectWithValue(
                 error.response?.data?.message || "Failed to remove item from cart"
             )
@@ -60,9 +85,11 @@ export const clearEntireCart = createAsyncThunk(
     'cart/clearEntireCart',
     async(_,{rejectWithValue})=>{
         try {
-            await clearCart()
+            await cartApiService.clearCart()
+           toast.success('Cart cleared')
             return true
         } catch (error:any) {
+            toast.error('failed to clear cart')
             return rejectWithValue(
                 error.response?.data?.message || "Failed to clear cart"
             )
@@ -76,9 +103,10 @@ export const updateCartItem = createAsyncThunk(
         quantity:number
     },{rejectWithValue})=>{
         try {
-            const response = await updateCart(item)
+            const response = await cartApiService.updateCart(item)
             return response.data
         } catch (error:any) {
+            toast.error('failed to update quantity')
             return rejectWithValue(
                 error.response?.data?.message || "Failed to update cart item"
             )
@@ -89,15 +117,19 @@ export const checkoutCart = createAsyncThunk(
     'cart/checkoutCart',
     async(_,{rejectWithValue})=>{
         try {
-            const response = await checkout()
+            const response = await cartApiService.checkout()
+            toast.success('successfully checkedout cart')
             return response.data
         } catch (error:any) {
+            toast.error('failed to checkout cart')
             return rejectWithValue(
                 error.response?.data?.message || "Failed to checkout"
             )
         }
     }
 )
+
+const applyOptimisticAdd = (state:CartState,)
 
 const CartSlice = createSlice({
     name:"cart",
