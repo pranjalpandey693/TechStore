@@ -1,37 +1,22 @@
 import type { CartItem, CartState, ServerCartResponse } from "@/interfaces";
 import { cartApiService} from "@/services/cartService";
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "sonner";
+
 
 
 
 const initialState:CartState = {
     items:[],
     totalAmount:0,
-    loading:false,
+    isAdding: false,
+    isRemoving: false, 
+    isUpdating: false,
+    isClearing: false,
+    isFetching: false,
     error:null,
 }
 
-const createBackupstate = (state:CartState)=>({
-    items:[...state.items],
-    totalAmount: state.totalAmount
-    
-})
-
-const applyServerResponse = (state:CartState,payload:ServerCartResponse)=>{
-    if(payload.updatedCart){
-        state.items = payload.updatedCart.products
-        state.totalAmount= payload.updatedCart.totalCartPrice
-    }
-}
-
-const restoreFromBackup = (state:CartState)=>{
-    if(state.previousState){
-        state.items= state.previousState.item
-        state.totalAmount = state.previousState.totalAmount
-        delete state.previousState
-    }
-}
 
 export const fetchCart = createAsyncThunk(
     'cart/fetchCart',
@@ -70,9 +55,9 @@ export const removeItemCart = createAsyncThunk(
     'cart/removeItemCart',
     async(productId:string,{rejectWithValue})=>{
         try {
-           await cartApiService.deleteFromCart(productId)
+         const response =   await cartApiService.deleteFromCart(productId)
            toast.success('Item Removed')
-             return productId
+             return response.data
         } catch (error:any) {
             toast.error('Remove Item Failed')
             return rejectWithValue(
@@ -85,9 +70,9 @@ export const clearEntireCart = createAsyncThunk(
     'cart/clearEntireCart',
     async(_,{rejectWithValue})=>{
         try {
-            await cartApiService.clearCart()
+          const response =   await cartApiService.clearCart()
            toast.success('Cart cleared')
-            return true
+            return response.data
         } catch (error:any) {
             toast.error('failed to clear cart')
             return rejectWithValue(
@@ -129,57 +114,73 @@ export const checkoutCart = createAsyncThunk(
     }
 )
 
-const applyOptimisticAdd = (state:CartState,)
+
+const createBackupstate = (state:CartState)=>({
+    items:[...state.items],
+    totalAmount: state.totalAmount
+    
+})
+
+const applyServerResponse = (state:CartState,payload:ServerCartResponse)=>{
+    if(payload.updatedCart){
+        state.items = payload.updatedCart.products
+        state.totalAmount= payload.updatedCart.totalCartPrice
+    }
+}
+
+const restoreFromBackup = (state:CartState)=>{
+    if(state.previousState){
+        state.items= state.previousState.items
+        state.totalAmount = state.previousState.totalAmount
+        delete state.previousState
+    }
+}
+
+const applyOptimisticAdd = (state:CartState,productId:string,quantity:number,estimatedPrice=0)=>{
+    const existingIndex = state.items.findIndex(item =>item.productId===productId)
+
+    if(existingIndex!==-1){
+        const existingItem = state.items[existingIndex]
+        existingItem.quantity += quantity
+        state.totalAmount += existingItem.price * quantity
+    } else {
+        const newItem :CartItem ={
+            productId:productId,
+            name:"Loading...",
+            quantity,
+            price:estimatedPrice,
+            status:"Not_processed"
+        }
+        state.items.push(newItem)
+        state.totalAmount+= estimatedPrice * quantity
+    }
+}
+
+const applyOptimisticRemove = (state:CartState, productId:string)=>{
+    const index = state.items.findIndex(item => item.productId === productId)
+    if(index !==-1){
+        const item = state.items[index]
+        state.totalAmount -= item.quantity * item.price
+        state.items.splice(index,1)
+    }
+}
+
+const applyOptimisticQuantityUpdate = (state:CartState,productId:string,newQuantity: number)=>{
+    const index = state.items.findIndex(item => item.productId === productId)
+    if(index !== -1){
+        const item = state.items[index]
+        const oldTotal = item.price * item.quantity
+        item.quantity = newQuantity
+        state.totalAmount = state.totalAmount - oldTotal + (item.price * item.quantity)
+    }
+}
+
 
 const CartSlice = createSlice({
     name:"cart",
     initialState,
     reducers:{
-        addItem: (state,action:PayloadAction<CartItem>)=>{
-            const existingItem = state.items.find(
-                (item)=>item.productId === action.payload.productId
-            )
-            if(existingItem){
-                existingItem.quantity += action.payload.quantity
-            }else {
-                state.items.push(action.payload)
-            }
-            state.totalAmount += action.payload.price * action.payload.quantity
-        },
-
-        removeItem: (state,action:PayloadAction<CartItem>)=>{
-            const index = state.items.findIndex(
-                (item)=>item.productId === action.payload.productId
-            )
-            if(index!==-1){
-                const item = state.items[index]
-                state.totalAmount -= item.price * item.quantity
-                state.items.splice(index,1)
-            }
-        },
-        increasequantity:(state,action:PayloadAction<string>)=>{
-               const item = state.items.find(
-                (item)=>item.productId === action.payload
-               )
-               if(item){
-                item.quantity+=1
-                state.totalAmount += item.price
-               }
-        },
-        decreasequantity:(state,action:PayloadAction<string>)=>{
-               const item = state.items.find(
-                (item)=>item.productId === action.payload
-               )
-               if(item&&item.quantity>1){
-                item.quantity-=1
-                state.totalAmount -= item.price
-               }else if(item&&item.quantity===1){
-                  state.items = state.items.filter(
-                    (item)=> item.productId !== action.payload
-                  )
-                  state.totalAmount-= item.price
-               }
-        },
+       
         clearError:(state)=>{
             state.error = null
         },
@@ -193,40 +194,100 @@ const CartSlice = createSlice({
     extraReducers: (builder)=>{
         builder
          .addCase(fetchCart.pending,(state)=>{
-            state.loading = true
+            state.isFetching = true
             state.error =null
          })
          .addCase(fetchCart.fulfilled,(state,action)=>{
-            state.loading= false
-            state.items = action.payload.products || []
-            state.totalAmount = action.payload.totalCartPrice || 0
+            state.isFetching= false
+            applyServerResponse(state,action.payload)
          })
          .addCase(fetchCart.rejected,(state,action)=>{
-            state.loading= false
-            state.error = action.payload as string
+            state.isFetching= false
+            state.error = action.payload as string || 'Failed to fetch cart'
          })
 
          builder
-         .addCase(addItemCart.pending,(state)=>{
-            state.loading = true
+         .addCase(addItemCart.pending,(state,action)=>{
+            state.isAdding = true
             state.error =null
+            state.previousState = createBackupstate(state)
+
+            const {productId, quantity}=action.meta.arg
+            applyOptimisticAdd(state,productId,quantity)
          })
          .addCase(addItemCart.fulfilled,(state,action)=>{
-            state.items = action.payload.updatedCart.products
-            state.totalAmount = action.payload.updatedCart.totalCartPrice || 0
+            state.isAdding = false 
+            applyServerResponse(state,action.payload)
          })
          .addCase(addItemCart.rejected,(state,action)=>{
-            state.loading = false
-            state.error = action.payload as string
+            state.isAdding = false
+            state.error = action.payload as string || 'failed to add item to cart'
+            restoreFromBackup(state)
          })
 
          builder
-         .addCase(removeItemCart.pending, (state)=>{
-            state.loading= true
+         .addCase(removeItemCart.pending, (state,action)=>{
+            state.isRemoving= true
             state.error = null
+            state.previousState = createBackupstate(state)
+
+            const productId = action.meta.arg
+            applyOptimisticRemove(state,productId)
          })
          .addCase(removeItemCart.fulfilled,(state,action)=>{
+            state.isRemoving = false
+            applyServerResponse(state,action.payload)
             
          })
+         .addCase(removeItemCart.rejected,(state,action)=>{
+               state.isRemoving = false
+               state.error = action.payload as string || 'failed to remove item from cart'
+               restoreFromBackup(state)
+
+         })
+
+         builder
+         .addCase(updateCartItem.pending,(state,action)=>{
+            state.isUpdating = true
+            state.error = null
+            state.previousState = createBackupstate(state)
+
+            const {productId,quantity}= action.meta.arg
+            applyOptimisticQuantityUpdate(state,productId,quantity)
+         })
+         .addCase(updateCartItem.fulfilled,(state,action)=>{
+              state.isUpdating = false
+              applyServerResponse(state,action.payload)
+         })
+         .addCase(updateCartItem.rejected,(state,action)=>{
+            state.isUpdating = false
+            state.error = action.payload as string || 'failed to update item '
+            restoreFromBackup(state)
+
+      })
+
+         builder
+         .addCase(clearEntireCart.pending,(state)=>{
+            state.isClearing = true
+            state.error = null
+            state.previousState = createBackupstate(state)
+
+            state.items= []
+            state.totalAmount = 0
+         })
+         .addCase(clearEntireCart.fulfilled,(state,action)=>{
+              state.isClearing = false
+              applyServerResponse(state,action.payload)
+         })
+         .addCase(clearEntireCart.rejected,(state,action)=>{
+            state.isClearing = false
+            state.error = action.payload as string || 'failed to clear cart '
+            restoreFromBackup(state)
+
+      })
     }
 })
+
+
+export const {clearError,calculateTotal}=CartSlice.actions
+export default  CartSlice.reducer

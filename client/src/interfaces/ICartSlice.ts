@@ -19,11 +19,16 @@ interface ServerCartResponse {
 interface CartState {
     items: CartItem[]
     totalAmount:number
-    loading:boolean
+    isAdding: boolean,
+    isRemoving: boolean, 
+    isUpdating: boolean,
+    isClearing: boolean,
+    isFetching: boolean,
+
     error:string| null
 
     previousState?:{
-        item:CartItem[]
+        items:CartItem[]
         totalAmount:number
     }
 }
