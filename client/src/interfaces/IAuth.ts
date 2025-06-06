@@ -1,7 +1,13 @@
 export interface AuthState {
-    user: string|null,
-    isAuthenticated :boolean ,
-    loading: boolean,
-    error: string |null
-
+    user: string,
+    isAuthenticated: boolean,
+    isLoggingIn: boolean,
+    isRegistering: boolean,
+    isLoggingOut: boolean,
+    isRefreshing: boolean,
+    isVerifying: boolean,
+    error: string | null,
+    lastLoginTime: string,
+    sessionExpiry: string,
+    rememberMe: boolean
 }
