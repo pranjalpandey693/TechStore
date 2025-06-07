@@ -1,15 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken"
 import { User } from "../models";
-import { IUser } from "../interfaces";
+import { IUser,JwtPayload } from "../interfaces";
 
 export interface AuthRequest extends Request {
     user?: IUser
 }
 
-interface JwtPayload{
-    id: string
-}
+
 
 const unauthorizedResponse = (res: Response, message = "Unauthorized") => {
     res.status(401).json({ message });
