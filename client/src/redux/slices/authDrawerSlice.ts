@@ -19,7 +19,7 @@ const authDrawerSlice = createSlice({
     initialState,
     reducers:{
         openDrawer: (state,action:PayloadAction<AuthMode>)=>{
-            state.isOpen =true,
+            state.isOpen =true
             state.mode = action.payload
         },
         closeDrawer: (state)=>{
