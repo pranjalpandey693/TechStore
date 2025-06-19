@@ -74,5 +74,3 @@ const HomePage = () => {
 
 export default HomePage;
 
-
-hgjgjgjg
