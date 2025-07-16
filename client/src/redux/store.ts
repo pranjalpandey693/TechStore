@@ -3,13 +3,15 @@ import authReducer from "./slices/authSlice"
 import cartReducer from './slices/CartSlice'
 import authDrawerReducer from './slices/authDrawerSlice'
 import productReducer from './slices/productSlice'
+import searchReducer from './slices/searchslice'
 
 export const store = configureStore({
     reducer :{
         auth: authReducer,
         cart:cartReducer,
         authDrawer:authDrawerReducer,
-        product:productReducer
+        product:productReducer,
+        search: searchReducer
     }
 })
 
