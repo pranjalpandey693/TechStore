@@ -1,4 +1,4 @@
-import type { Product, ProductState } from "@/interfaces";
+import type { Product, ProductSearchParams, ProductState } from "@/interfaces";
 import {productApiService} from "@/services/productService"
 import { createAsyncThunk, createSlice,  type PayloadAction } from "@reduxjs/toolkit";
 
@@ -12,9 +12,9 @@ const initialState:ProductState ={
 
 export const fetchProducts = createAsyncThunk(
     'products/fetchProducts',
-    async(_,{rejectWithValue})=>{
+    async(searchParams: ProductSearchParams = {},{rejectWithValue})=>{
         try {
-            const response = await productApiService.getProducts()
+            const response = await productApiService.getProducts(searchParams)
             return response.data
         } catch (error :any ) {
           return rejectWithValue(

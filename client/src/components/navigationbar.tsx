@@ -1,8 +1,9 @@
 import type { User } from '@/interfaces';
 import React from 'react';
+import { Search,User as UserIcon, ShoppingCart, Menu, X, ChevronLeft, ChevronRight, Star, Heart, ShoppingBag } from 'lucide-react';
 
 interface Props {
-    user:User
+    user?:User
 }
 
 const Navigationbar:React.FC<Props> = ({user}) => {
@@ -11,7 +12,29 @@ const Navigationbar:React.FC<Props> = ({user}) => {
     <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
      <div className='flex justify-between items-center h-16'>
            
-           
+        <div className='flex-shrink-0 flex items-center'>
+        <h1 className='text-2xl font-bold text-blue-600' >TechStore</h1>    
+        </div>   
+
+        <div className='hidden md:flex items-center space-x-8'>
+            <a href="#" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Home</a>
+            <a href="#" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Orders</a>
+            <a href="#" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>About Us</a>
+            {user?.isadmin && (
+                <a href="#" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Manage Products</a>
+            )}
+        </div>
+
+        <div className='hidden md:flex flex-1 max-w-lg mx-8'>
+            <div className=' relative w-full'>
+                <input type="text" 
+                       placeholder='Search Products...'
+                       className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                />
+                <Search className='absolute left-3 top-2.5  h-5 w-5 text-gray-400'/>
+                </div> 
+        </div>
+
         </div>
     </div>
 

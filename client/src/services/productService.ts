@@ -1,10 +1,22 @@
+import type { ProductSearchParams } from '@/interfaces'
 import {API} from './api'
 
 
 class ProductApiService {
 
-    async getProducts (){
-        return API.get("/products")
+    async getProducts (params: ProductSearchParams = {}){
+         
+        const queryParams = new URLSearchParams()
+
+        Object.entries(params).forEach(([key,value])=>{
+            if(value !== undefined && value!==null && value!==''){
+                queryParams.append(key,value.toString())
+            }
+        })
+
+        const queryString = queryParams.toString()
+        const url = queryString ? `/products?${queryString}`: '/products'
+        return API.get(url)
     }
     
      async getProductsById (productId:string){

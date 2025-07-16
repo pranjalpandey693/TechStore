@@ -14,4 +14,13 @@ interface ProductState {
     error:string|null
 }
 
-export type {Product,ProductState}
+interface ProductSearchParams {
+    search?: string
+    minPrice?:number
+    maxPrice?: number
+    sort?:string
+    page?:number
+    limit?:number
+}
+
+export type {Product,ProductState,ProductSearchParams}
