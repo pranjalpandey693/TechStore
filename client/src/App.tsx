@@ -1,10 +1,17 @@
-import { Button } from "@/components/ui/button"
-import HomePage from "./pages/Home"
+
+import { Route, Routes } from "react-router-dom"
+import HomePage from "./pages/Login"
 
 
 function App() {
   return (
-     <HomePage/>
+    <Routes>
+    <Route path="/" element={<HomePage/>}/>
+    <Route path="/about" element={<HomePage/>}/>
+    <Route path="/orders" element={<HomePage/>}/>
+    <Route path="/manageProducts" element={<HomePage/>}/>
+
+    </Routes>
   )
 }
 
