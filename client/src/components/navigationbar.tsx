@@ -1,9 +1,10 @@
 import type { User } from '@/interfaces';
 import React, { useState } from 'react';
 import {useDispatch,useSelector} from 'react-redux'
-import { Search,User as UserIcon, ShoppingCart, Menu, X, ChevronLeft, ChevronRight, Star, Heart, ShoppingBag } from 'lucide-react';
+import { Search,User as UserIcon, ShoppingCart, Menu, X } from 'lucide-react';
 import type { RootState } from '@/redux/store';
 import { setSearchTerm } from '@/redux/slices/searchslice';
+import { Link } from 'react-router-dom';
 
 interface Props {
     user?:User
@@ -30,14 +31,14 @@ const Navigationbar:React.FC<Props> = ({user}) => {
         </div>   
 
         <div className='hidden md:flex items-center space-x-8'>
-            <a href="#" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Home</a>
-            <a href="#" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Orders</a>
-            <a href="#" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>About Us</a>
+            <Link to="/" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Home</Link>
+            <Link to="/orders" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Orders</Link>
+            <Link to="/about" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>About Us</Link>
             {user?.isadmin && (
-                <a href="#" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Manage Products</a>
+                <Link to="manageProducts" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Manage Products</Link>
             )}
         </div>
-
+            
         <div className='hidden md:flex flex-1 max-w-lg mx-8'>
             <div className=' relative w-full'>
                 <input type="text" 
@@ -85,7 +86,14 @@ const Navigationbar:React.FC<Props> = ({user}) => {
                 />
                 <Search className='absolute left-3 top-2.5  h-5 w-5 text-gray-400'/>
              </div> 
-
+               <Link to="/" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Home</Link>
+               <Link to="/orders" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>orders</Link>
+               <button  className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Login</button>
+               <button  className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Register</button>
+                {user?.isadmin && (
+                <Link to="/manageProducts" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Manage Products</Link>
+            )}
+               <Link to="/about" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>About us</Link>
             </div>
         </div>
       )}
