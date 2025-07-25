@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ShoppingCart, User, Menu, X, ChevronLeft, ChevronRight, Star, Heart, ShoppingBag } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Mock data for products
 const products = [
@@ -101,7 +102,7 @@ const HomePage = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 font-medium transition-colors">Home</a>
+              <Link to="/" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Home</Link>
               <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 font-medium transition-colors">About Us</a>
               <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 font-medium transition-colors">Orders</a>
               {isAdmin && (
@@ -168,7 +169,7 @@ const HomePage = () => {
                 />
                 <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
               </div>
-              <a href="#" className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded">Home</a>
+              <Link to="/" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Home</Link>
               <a href="#" className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded">About Us</a>
               <a href="#" className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded">Orders</a>
               <a href="#" className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded">Login</a>

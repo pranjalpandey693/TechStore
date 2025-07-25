@@ -1,3 +1,4 @@
+import Footer from '@/components/footer';
 import Navigationbar from '@/components/navigationbar';
 import type { User } from '@/interfaces';
 import React from 'react';
@@ -11,6 +12,7 @@ const Home:React.FC = () => {
   return (
     <div>
       <Navigationbar user={testuser}/>
+      <Footer/>
     </div>
   );
 }
