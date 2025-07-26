@@ -1,5 +1,5 @@
 import Footer from '@/components/footer';
-import Navigationbar from '@/components/navigationbar';
+import Navigationbar from '@/components/Nav/navigationbar';
 import type { User } from '@/interfaces';
 import React from 'react';
 
