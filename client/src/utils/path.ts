@@ -20,7 +20,7 @@ const appRoutes = {
     },
     admin:{
         INDEX:'/admin',
-        MANAGE_PRODUCT:'mangae_product',
+        MANAGE_PRODUCT:'manage_product',
         MANAGE_ORDERS:'manage_orders'
 
     },

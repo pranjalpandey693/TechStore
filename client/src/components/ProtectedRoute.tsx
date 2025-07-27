@@ -11,7 +11,7 @@ export  const ProtectedRoute = ({children}: {children: JSX.Element})=>{
        
 }
 
-export const AdminRoute = ({children}: {children: JSX.Element})=>{
+export const ProtectedAdminRoute = ({children}: {children: JSX.Element})=>{
       const user = useSelector((state:RootState)=>state.auth.user)
      return  user?.isadmin ? children : <Navigate to="/"/>
        

@@ -2,7 +2,7 @@ import type { RouteObject } from "react-router-dom";
 import paths from '@/utils/path'
 import Authlayout from "@/layout/Auth/Authlayout";
 
-const routesObject:RouteObject[]=[
+const AuthRoute:RouteObject[]=[
     {
         path: paths.auth.INDEX,
         element: <Authlayout/>,
@@ -28,3 +28,5 @@ const routesObject:RouteObject[]=[
         ]
     }
 ]
+
+export default AuthRoute
