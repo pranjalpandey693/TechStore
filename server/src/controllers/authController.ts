@@ -70,6 +70,7 @@ export const getme = async(req:AuthRequest,res:Response) =>{
     res.status(401).json({message:"Unauthorized"})
   }
   res.json(req.user)
+  return
 }
 
 export const refreshToken = async(req:AuthRequest,res:Response)=>{
@@ -80,6 +81,7 @@ export const refreshToken = async(req:AuthRequest,res:Response)=>{
       success:false,
       message:"No refresh token provided"
     })
+    return
    }
 
    const decoded = jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SERCRET||'') as JwtPayload
@@ -98,7 +100,7 @@ export const refreshToken = async(req:AuthRequest,res:Response)=>{
    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || "", {
     expiresIn: "1h",
   })
-   const newRefreshToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET || "", {
+   const newRefreshToken = jwt.sign({ id: user.id }, process.env.REFRESH_TOKEN_SERCRET || "", {
     expiresIn: "1d",
   })
    await User.findByIdAndUpdate(user.id,{refreshToken:newRefreshToken})

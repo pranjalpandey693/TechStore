@@ -8,7 +8,7 @@ router.post("/register",register)
 router.post("/login",login)
 router.post("/logout",logout)
 router.get("/me",authenticate,getme)
-router.get('/verify',authenticate,refreshToken)
-router.post('/refresh',authenticate,verifyToken)
+router.get('/verify',authenticate,verifyToken)
+router.post('/refresh',authenticate,refreshToken)
 
 export default router
