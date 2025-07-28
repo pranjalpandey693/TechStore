@@ -33,7 +33,7 @@ const Navigationbar:React.FC<Props> = ({user}) => {
         <div className='hidden md:flex items-center space-x-8'>
             <Link to="/" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Home</Link>
             <Link to="/orders" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Orders</Link>
-            <Link to="/about" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>About Us</Link>
+            <Link to="/test" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Contact Us</Link>
             {user?.isadmin && (
                 <Link to="manageProducts" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Manage Products</Link>
             )}

@@ -72,7 +72,7 @@ export const editProduct = createAsyncThunk(
             return response.data
         } catch (error :any ) {
           return rejectWithValue(
-            error.response?.data?.message || "Failed to add product"
+            error.response?.data?.message || "Failed to update product"
           ) 
         }
     }
@@ -141,7 +141,7 @@ const productSlice = createSlice({
         })
         .addCase(createProduct.fulfilled,(state,action)=>{
             state.loading = false
-            state.products.push = action.payload
+            state.products.push(action.payload)
         })
         .addCase(createProduct.rejected,(state,action)=>{
             state.loading = false
