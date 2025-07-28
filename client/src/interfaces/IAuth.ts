@@ -7,7 +7,7 @@ export interface AuthState {
     isRegistering: boolean,
     isLoggingOut: boolean,
     isRefreshing: boolean,
-    isVerifying: boolean,
+    isGettingUser: boolean,
 
     error: string | null,
    
