@@ -5,13 +5,13 @@ import "./index.css";
 
 import { store } from "./redux/store.ts";
 import { BrowserRouter } from "react-router-dom";
-import Routes from "./routes/index.tsx";
+import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-      <Routes/>
+     <App/>
       </BrowserRouter>
     </Provider>
   </StrictMode>
