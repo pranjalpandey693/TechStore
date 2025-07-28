@@ -21,7 +21,7 @@ async loginUser  (data: {email:string ,password:string}){
  
  async refreshToken(){return API.post("auth/refresh")}
 
- async verifyToken(){return API.get('auth/verify')}
+ 
 }
 
 
