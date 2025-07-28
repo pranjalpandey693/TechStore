@@ -12,7 +12,7 @@ const initialState :AuthState = {
     isRegistering: false,
     isLoggingOut: false,
     isRefreshing: false,
-    isVerifying: false,
+    isGettingUser: false,
     
     error: null,
    
@@ -84,16 +84,16 @@ export const refreshToken = createAsyncThunk(
         }
     }
 )
-export const verifyToken = createAsyncThunk(
-    'auth/verifyToken',
+export const getCurrentUser = createAsyncThunk(
+    'auth/getCurrentUser',
     async(_,{rejectWithValue})=>{
         try {
-         const response = await authApiService.verifyToken()
+         const response = await authApiService.getCurrentUser()
          return {user:response.data.user}
 
         } catch (error:any) {
             return rejectWithValue(
-                error.response?.data?.message || "token verification failed"
+                error.response?.data?.message || "User not found"
             )
         }
     }
@@ -122,7 +122,7 @@ const authSlice = createSlice({
         state.isRegistering = false;
         state.isLoggingOut = false;
         state.isRefreshing = false;
-        state.isVerifying = false;
+        state.isGettingUser = false;
        }, 
     },
     extraReducers:(builder)=>{
@@ -189,17 +189,17 @@ const authSlice = createSlice({
       })
 
        builder
-       .addCase(verifyToken.pending,(state)=>{
-           state.isVerifying = true
+       .addCase(getCurrentUser.pending,(state)=>{
+           state.isGettingUser = true
            state.error = null
       })
-      .addCase(verifyToken.fulfilled,(state,action)=>{
-         state.isVerifying = false
+      .addCase(getCurrentUser.fulfilled,(state,action)=>{
+         state.isGettingUser = false
          state.user = action.payload.user
          state.isAuthenticated= true
       })
-      .addCase(verifyToken.rejected,(state,action)=>{
-       state.isVerifying = false
+      .addCase(getCurrentUser.rejected,(state,action)=>{
+       state.isGettingUser = false
        state.error = action.payload as string || "verification failed"
        resetAuthState(state)
        
