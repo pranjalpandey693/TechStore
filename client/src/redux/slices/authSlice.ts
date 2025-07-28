@@ -200,7 +200,7 @@ const authSlice = createSlice({
       })
       .addCase(getCurrentUser.rejected,(state,action)=>{
        state.isGettingUser = false
-       state.error = action.payload as string || "verification failed"
+       state.error = action.payload as string || "user not found"
        resetAuthState(state)
        
 
