@@ -136,11 +136,3 @@ export const refreshToken = async(req:AuthRequest,res:Response)=>{
    }
 }
 
-export const verifyToken = async (req:AuthRequest,res:Response)=>{
- res.json({
-  success: true,
-  user:req.user!,
-  message: 'token is valid',
- })
- return
-}
