@@ -1,22 +1,35 @@
 import React, { useState } from 'react';
 import {useDispatch,useSelector} from 'react-redux'
 import { Search,User as UserIcon, ShoppingCart, Menu, X } from 'lucide-react';
-import type { RootState } from '@/redux/store';
+import { type AppDispatch, type RootState } from '@/redux/store';
 import { setSearchTerm } from '@/redux/slices/searchslice';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
+import { logoutUser } from '@/redux/slices/authSlice';
 
 
 
 const Navigationbar:React.FC = () => {
      
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>()
     const search = useSelector((state:RootState)=> state.search.searchterm)
     const User = useSelector((state:RootState)=>state.auth)
 
     const handlechange = (e:React.ChangeEvent<HTMLInputElement>)=>{
         dispatch(setSearchTerm(e.target.value))
     }
-   
+    const navigate = useNavigate()
+    const hadleLogin = ()=>{
+       navigate('/auth/login')
+    }
+    const handleRegister = ()=>{
+      navigate('/auth/signup')
+    }
+    const hadleLogout = ()=>{
+      dispatch(logoutUser())
+       navigate('/auth/login')
+      
+    }
+    
     const [isMenuOpen,setIsMenuOpen] = useState(false)
 
   return (
@@ -50,13 +63,23 @@ const Navigationbar:React.FC = () => {
         </div>
 
         <div className='hidden md:flex items-center space-x-4'>
-          <button className='text-gray-700 hover:text-blue-600 p-2 rounded-lg hover:bg-gray-100 transition-colors'>
+        {!User.isAuthenticated&&(
+            <button onClick={hadleLogin} className='text-gray-700 hover:text-blue-600 p-2 rounded-lg hover:bg-gray-100 transition-colors'>
             <UserIcon className=''size={20}/>
             <span className=' text-sm'>Login</span>
           </button>
-          <button className='text-gray-700 hover:text-blue-600 p-2 rounded-lg hover:bg-gray-100 transition-colors'>
+        )}
+         {User.isAuthenticated&&(
+           <button onClick={hadleLogout} className='text-gray-700 hover:text-blue-600 p-2 rounded-lg hover:bg-gray-100 transition-colors'>
+            <UserIcon className=''size={20}/>
+            <span className=' text-sm'>Logout</span>
+          </button>
+         )}
+          {!User.isAuthenticated&&(
+            <button onClick={handleRegister} className='text-gray-700 hover:text-blue-600 p-2 rounded-lg hover:bg-gray-100 transition-colors'>
             <span className=' text-sm'>Register</span>
           </button>
+          )}
           <button className=' text-gray-700 hover:text-blue-600 p-2 rounded-lg  hover:bg-gray-100 transition-colors'>
              <ShoppingCart size={20}/>
           </button>
@@ -86,8 +109,17 @@ const Navigationbar:React.FC = () => {
              </div> 
                <Link to="/" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Home</Link>
                <Link to="/orders" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>orders</Link>
-               <button  className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Login</button>
-               <button  className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Register</button>
+              
+             {!User.isAuthenticated&&(
+                <button  className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Login</button>
+             )}
+             {!User.isAuthenticated&&(
+                <button  className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Register</button>
+             )}
+             {User.isAuthenticated&&(
+                <button  className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Logout</button>
+             )}
+            
                 {User.user?.isadmin && (
                 <Link to="/manageProducts" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Manage Products</Link>
             )}
