@@ -1,4 +1,3 @@
-import type { User } from '@/interfaces';
 import React, { useState } from 'react';
 import {useDispatch,useSelector} from 'react-redux'
 import { Search,User as UserIcon, ShoppingCart, Menu, X } from 'lucide-react';
@@ -6,14 +5,13 @@ import type { RootState } from '@/redux/store';
 import { setSearchTerm } from '@/redux/slices/searchslice';
 import { Link } from 'react-router-dom';
 
-interface Props {
-    user?:User
-}
 
-const Navigationbar:React.FC<Props> = ({user}) => {
+
+const Navigationbar:React.FC = () => {
      
     const dispatch = useDispatch()
     const search = useSelector((state:RootState)=> state.search.searchterm)
+    const User = useSelector((state:RootState)=>state.auth)
 
     const handlechange = (e:React.ChangeEvent<HTMLInputElement>)=>{
         dispatch(setSearchTerm(e.target.value))
@@ -34,7 +32,7 @@ const Navigationbar:React.FC<Props> = ({user}) => {
             <Link to="/" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Home</Link>
             <Link to="/orders" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Orders</Link>
             <Link to="/test" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Contact Us</Link>
-            {user?.isadmin && (
+            {User.user?.isadmin && (
                 <Link to="manageProducts" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Manage Products</Link>
             )}
         </div>
@@ -90,7 +88,7 @@ const Navigationbar:React.FC<Props> = ({user}) => {
                <Link to="/orders" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>orders</Link>
                <button  className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Login</button>
                <button  className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Register</button>
-                {user?.isadmin && (
+                {User.user?.isadmin && (
                 <Link to="/manageProducts" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Manage Products</Link>
             )}
                <Link to="/about" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>About us</Link>
