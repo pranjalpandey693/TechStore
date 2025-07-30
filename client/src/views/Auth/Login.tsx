@@ -1,0 +1,82 @@
+
+import type { AppDispatch, RootState } from '@/redux/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { z} from 'zod'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {useForm} from 'react-hook-form'
+import { loginUser } from '@/redux/slices/authSlice'
+import { Card, CardContent, CardHeader,CardTitle } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router-dom'
+
+const loginSchema = z.object({
+    email:z.email("Invalid email"),
+    password:z.string().min(6,'Password must be at least 6 characters')
+})
+
+type LoginForm = z.infer<typeof loginSchema>
+
+const Login: React.FC = ()=>{
+    const dispatch = useDispatch<AppDispatch>()
+    const navigate = useNavigate()
+    const {isLoggingIn} = useSelector((state:RootState)=>state.auth)
+     const {
+        register,
+        handleSubmit,
+      formState:{errors},
+     }= useForm<LoginForm>({
+        resolver:zodResolver(loginSchema),
+     })
+     
+     const onSubmit = async (data:LoginForm)=>{
+        try {
+       await dispatch(loginUser(data)).unwrap()
+       navigate('/')
+                    
+        } catch (error) {
+            
+        }
+     }
+
+     return( 
+
+        <div className='  flex flex-col items-center justify-center min-h-screen   '>
+               <h1 className='text-3xl font-bold mb-3 text-blue-600' >TechStore</h1> 
+            <Card className='w-full max-w-md shadow-lg '>
+                <CardHeader>
+                    <CardTitle className='text-left text-2xl'>
+                        Login 
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+                        <div>
+                          <Label className='mb-2' htmlFor='email'>Email</Label>
+                          <Input type='email' id='email' {...register('email')}/>
+                         {errors.email && (
+                            <p className='text-red-500 text-sm mt-1'>{errors.email.message}</p>
+                         )}
+                        </div>
+
+                        <div>
+                             <Label className='mb-2' htmlFor='password'>Password</Label>
+                          <Input type='password' id='password' {...register('password')}/>
+                         {errors.password && (
+                            <p className='text-red-500 text-sm mt-1'>{errors.password.message}</p>
+                         )}
+                        </div>
+
+                        <Button type='submit' disabled={isLoggingIn} className='w-full '>{isLoggingIn?'Loggin in ...':'Login'}</Button>
+                    </form>
+                </CardContent>
+
+            </Card>
+
+        </div>
+
+     )
+    }
+
+    export default Login
