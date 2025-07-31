@@ -1,6 +1,8 @@
 import type { RouteObject } from "react-router-dom";
 import paths from '@/utils/path'
 import Authlayout from "@/layout/Auth/Authlayout";
+import Login from "@/views/Auth/Login";
+import Register from "@/views/Auth/Register";
 
 const AuthRoute:RouteObject[]=[
     {
@@ -9,8 +11,8 @@ const AuthRoute:RouteObject[]=[
         children:[
             {
                 index:true,
-                path:paths.auth.SIGNUP,
-                element:"sign up"
+                path:paths.auth.REGISTER,
+                element:<Register/>
             },
             {
                 path:paths.auth.ADMIN_SIGNUP,
@@ -18,7 +20,7 @@ const AuthRoute:RouteObject[]=[
             },
             {
                 path:paths.auth.LOGIN,
-                element:"login"
+                element:<Login/>
             },
             {
                 path:paths.auth.LOGOUT,
