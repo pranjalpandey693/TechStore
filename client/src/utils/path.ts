@@ -1,7 +1,7 @@
 const appRoutes = {
     auth:{
         INDEX:'/auth',
-        SIGNUP:'signup',
+        REGISTER:'register',
         ADMIN_SIGNUP:'admin_signup',
         LOGIN:'login',
         LOGOUT:'logout'
