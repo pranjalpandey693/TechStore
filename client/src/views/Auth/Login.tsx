@@ -39,11 +39,13 @@ const Login: React.FC = ()=>{
             
         }
      }
-
+    const handleTechStore =()=>{navigate('/') }
+    const handleRegister =()=>{navigate('/auth/register') }
+     
      return( 
 
         <div className='  flex flex-col items-center justify-center min-h-screen   '>
-               <h1 className='text-3xl font-bold mb-3 text-blue-600' >TechStore</h1> 
+               <h1 onClick={handleTechStore}className='text-3xl font-bold mb-3 text-blue-600' >TechStore</h1> 
             <Card className='w-full max-w-md shadow-lg '>
                 <CardHeader>
                     <CardTitle className='text-left text-2xl'>
@@ -69,6 +71,8 @@ const Login: React.FC = ()=>{
                         </div>
 
                         <Button type='submit' disabled={isLoggingIn} className='w-full '>{isLoggingIn?'Loggin in ...':'Login'}</Button>
+                        <p className='text-center text-sm'>or</p>
+                        <Button variant={'secondary'} className='w-full'  onClick={handleRegister}>Create Account</Button>
                     </form>
                 </CardContent>
 
