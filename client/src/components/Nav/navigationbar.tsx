@@ -22,12 +22,15 @@ const Navigationbar:React.FC = () => {
        navigate('/auth/login')
     }
     const handleRegister = ()=>{
-      navigate('/auth/signup')
+      navigate('/auth/register')
     }
     const hadleLogout = ()=>{
       dispatch(logoutUser())
        navigate('/auth/login')
       
+    }
+      const handleTechStore =()=>{
+        navigate('/')
     }
     
     const [isMenuOpen,setIsMenuOpen] = useState(false)
@@ -38,11 +41,11 @@ const Navigationbar:React.FC = () => {
      <div className='flex justify-between items-center h-16'>
            
         <div className='flex-shrink-0 flex items-center'>
-        <h1 className='text-2xl font-bold text-blue-600' >TechStore</h1>    
+        <h1 onClick={handleTechStore} className='text-2xl font-bold text-blue-600' >TechStore</h1>    
         </div>   
 
         <div className='hidden md:flex items-center space-x-8'>
-            <Link to="/" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Home</Link>
+         
             <Link to="/orders" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Orders</Link>
             <Link to="/test" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Contact Us</Link>
             {User.user?.isadmin && (
@@ -107,7 +110,7 @@ const Navigationbar:React.FC = () => {
                 />
                 <Search className='absolute left-3 top-2.5  h-5 w-5 text-gray-400'/>
              </div> 
-               <Link to="/" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>Home</Link>
+            
                <Link to="/orders" className='block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded'>orders</Link>
               
              {!User.isAuthenticated&&(
