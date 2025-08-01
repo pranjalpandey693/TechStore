@@ -51,7 +51,7 @@ const Register: React.FC = ()=>{
     const handleLogin =()=>{navigate('/auth/login') }
 
     return(
-        <div className='  flex flex-col items-center justify-center min-h-screen   '>
+        <div className=' z-0 flex flex-col items-center justify-center min-h-screen   '>
                <h1 onClick={handleTechStore} className='text-3xl font-bold mb-3 text-blue-600' >TechStore</h1> 
             <Card className='w-full max-w-md shadow-lg '>
                 <CardHeader>
