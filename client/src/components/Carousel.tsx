@@ -1,5 +1,6 @@
 import { useAnimation, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface CarouselProps {
   images: string[];
@@ -15,6 +16,10 @@ const ResponsiveCarousel: React.FC<CarouselProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
   const [imageWidth, setImageWidth] = useState(288);
+      const navigate = useNavigate()
+     const handleImgclick =()=>{
+        navigate('/')
+    }
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -72,6 +77,7 @@ const ResponsiveCarousel: React.FC<CarouselProps> = ({
       >
         {displayImages.map((src, i) => (
           <img
+          onClick={handleImgclick}
             key={i}
             src={src}
             alt={`Carousel-${i}`}
