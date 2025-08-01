@@ -32,13 +32,13 @@ const ResponsiveCarousel: React.FC<CarouselProps> = ({
       const totalWidth = images.length * imageWidth;
 
       controls.start({
-        x: -totalWidth ,
+        x: -totalWidth,
         transition: {
           duration: images.length * 3,
           ease: "linear",
           repeat: Infinity,
           repeatType: "loop",
-          repeatDelay:0
+          repeatDelay: 0,
         },
       });
     }
@@ -50,10 +50,7 @@ const ResponsiveCarousel: React.FC<CarouselProps> = ({
         index = (index + 1) % images.length;
         controls.start({
           x: -index * imageWidth,
-          transition: { duration: 0.6,
-                       ease: "easeInOut",
-                   
-           },
+          transition: { duration: 0.6, ease: "easeInOut" },
         });
       }, 3000);
       return () => {
@@ -61,7 +58,7 @@ const ResponsiveCarousel: React.FC<CarouselProps> = ({
       };
     }
   }, [type, imageWidth, images.length]);
-  const displayImages = [...images, ...images]
+  const displayImages = [...images, ...images];
 
   return (
     <div
