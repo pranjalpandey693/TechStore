@@ -2,13 +2,13 @@ import { useAnimation, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface CarouselProps {
+interface SlideAnimationProps {
   images: string[];
   type: "continuous" | "step";
   className?: string;
 }
 
-const ResponsiveCarousel: React.FC<CarouselProps> = ({
+const ResponsiveSlideAnimation: React.FC<SlideAnimationProps> = ({
   images,
   type,
   className,
@@ -90,4 +90,4 @@ const ResponsiveCarousel: React.FC<CarouselProps> = ({
   );
 };
 
-export default ResponsiveCarousel;
+export default ResponsiveSlideAnimation;

@@ -1,4 +1,4 @@
-export const AuthCarouselImages = [
+export const AuthSlideAnimatonImages = [
   "/carousel/slide1.webp",
   "/carousel/slide2.webp",
   "/carousel/slide3.webp",
