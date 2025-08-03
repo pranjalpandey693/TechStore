@@ -199,7 +199,7 @@ const HomePage = () => {
                 backgroundPosition: 'center'
               }}
             >
-              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+              <div className="absolute inset-0 bg-opacity-40 flex items-center justify-center">
                 <div className="text-center text-white px-4">
                   <h2 className="text-4xl md:text-6xl font-bold mb-4">{offer.title}</h2>
                   <p className="text-xl md:text-2xl mb-8">{offer.subtitle}</p>
@@ -215,18 +215,19 @@ const HomePage = () => {
         {/* Carousel Controls */}
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 p-2 rounded-full transition-all"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-10 hover:bg-opacity-100 p-2 rounded-full transition-all"
         >
           <ChevronLeft size={24} />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 p-2 rounded-full transition-all"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white opacity-10 hover:opacity-100 p-2 hover: rounded-full transition-all"
         >
-          <ChevronRight size={24} />
+          <ChevronRight size={24} />dfdsjfldsjfldsjfldsjfld
         </button>
 
         {/* Carousel Indicators */}
+        
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {offers.map((_, index) => (
             <button

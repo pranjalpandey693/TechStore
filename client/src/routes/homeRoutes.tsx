@@ -2,6 +2,7 @@ import type { RouteObject } from "react-router-dom";
 import paths from '@/utils/path'
 import PublicLayout from "@/layout/PublicLayout";
 import Sample from "@/pages/Login"
+import Home from "@/views/Home/Home";
 
 
 const HomeRoutes:RouteObject[]=[
@@ -17,7 +18,7 @@ const HomeRoutes:RouteObject[]=[
         children:[
             {
                 index:true,
-                element:'home'
+                element: <Home/>
             },
             {
                 path:paths.home.CONTACT,
