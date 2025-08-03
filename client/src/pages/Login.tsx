@@ -227,6 +227,10 @@ const HomePage = () => {
         </button>
 
         {/* Carousel Indicators */}
+          className={`transition-all  ${index=== currentSlide?
+                 `bg-gray-800 h-3 w-9 rounded-4xl`
+                :
+                `bg-white w-3 h-3 rounded-full`}`}
         
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {offers.map((_, index) => (
@@ -241,8 +245,9 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Products Section with Overlap */}
-      <div className="relative -mt-32 z-10">
+    
+  {/* Products Section with Overlap */}
+      <div className="relative mt-32 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow-xl p-6 md:p-8">
             <div className="flex justify-between items-center mb-8">
@@ -292,6 +297,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+       
 
       {/* About Us Section */}
       <section className="py-16 bg-gray-900 text-white mt-16">
@@ -356,3 +362,8 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+
+
+
+ 
