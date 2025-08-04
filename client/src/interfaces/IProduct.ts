@@ -1,18 +1,21 @@
 interface Product {
-    id:string
+    _id:string
     name:string
     price:number
     description:string
     stock:number
-    image?:string |File
+    image?:string 
 }
 
 interface ProductState {
     products: Product[]
+    total:number
     currentProduct: Product|null
     loading:boolean
     error:string|null
 }
+
+
 
 interface ProductSearchParams {
     search?: string
