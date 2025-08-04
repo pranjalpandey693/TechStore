@@ -2,7 +2,7 @@ import type { RouteObject } from "react-router-dom";
 import paths from '@/utils/path'
 import PublicLayout from "@/layout/PublicLayout";
 import Sample from "@/pages/Login"
-import Home from "@/views/Home/Home";
+import Home from "@/views/Home";
 
 
 const HomeRoutes:RouteObject[]=[

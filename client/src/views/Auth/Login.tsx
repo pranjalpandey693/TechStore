@@ -45,8 +45,8 @@ const Login: React.FC = ()=>{
      return( 
 
         <div className='  flex flex-col items-center justify-center min-h-screen   '>
-               <h1 onClick={handleTechStore}className='text-3xl font-bold mb-3 text-blue-600' >TechStore</h1> 
-            <Card className='w-full max-w-md shadow-lg '>
+               <button onClick={handleTechStore}className='text-3xl font-bold mb-3 text-blue-600' >TechStore</button> 
+            <Card className='w-full max-w-md shadow-lg bg-gray-50 '>
                 <CardHeader>
                     <CardTitle className='text-left text-2xl'>
                         Login 

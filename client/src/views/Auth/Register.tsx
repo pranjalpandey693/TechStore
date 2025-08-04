@@ -52,7 +52,7 @@ const Register: React.FC = ()=>{
 
     return(
         <div className=' z-0 flex flex-col items-center justify-center min-h-screen   '>
-               <h1 onClick={handleTechStore} className='text-3xl font-bold mb-3 text-blue-600' >TechStore</h1> 
+               <button onClick={handleTechStore} className='text-3xl font-bold mb-3 text-blue-600' >TechStore</button> 
             <Card className='w-full max-w-md shadow-lg '>
                 <CardHeader>
                     <CardTitle className='text-left text-2xl'>

@@ -90,7 +90,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Navigation Bar */}
       <nav className="bg-white shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -227,10 +227,7 @@ const HomePage = () => {
         </button>
 
         {/* Carousel Indicators */}
-          className={`transition-all  ${index=== currentSlide?
-                 `bg-gray-800 h-3 w-9 rounded-4xl`
-                :
-                `bg-white w-3 h-3 rounded-full`}`}
+         
         
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {offers.map((_, index) => (

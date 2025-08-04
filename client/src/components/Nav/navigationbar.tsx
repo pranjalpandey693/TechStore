@@ -36,12 +36,12 @@ const Navigationbar:React.FC = () => {
     const [isMenuOpen,setIsMenuOpen] = useState(false)
 
   return (
-   <nav className='sticky top-0 z-50 bg-white shadow-lg'>
+   <nav className='sticky top-0 z-50 bg-gray-100 shadow-lg'>
     <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
      <div className='flex justify-between items-center h-16'>
            
         <div className='flex-shrink-0 flex items-center'>
-        <h1 onClick={handleTechStore} className='text-2xl font-bold text-blue-600' >TechStore</h1>    
+        <button onClick={handleTechStore} className='text-2xl font-bold text-blue-600' >TechStore</button>    
         </div>   
 
         <div className='hidden md:flex items-center space-x-8'>
