@@ -5,6 +5,7 @@ import { createAsyncThunk, createSlice,  type PayloadAction } from "@reduxjs/too
 
 const initialState:ProductState ={
     products:[],
+    total:0,
     currentProduct:null,
     loading:false,
     error:null
@@ -113,7 +114,8 @@ const productSlice = createSlice({
         })
         .addCase(fetchProducts.fulfilled,(state,action)=>{
             state.loading = false
-            state.products= action.payload
+            state.products= action.payload.products
+            state.total = action.payload.total
         })
         .addCase(fetchProducts.rejected,(state,action)=>{
             state.loading = false
@@ -155,11 +157,11 @@ const productSlice = createSlice({
         })
         .addCase(editProduct.fulfilled,(state,action)=>{
             state.loading= false
-            const index = state.products.findIndex(p=>p.id===action.payload.id)
+            const index = state.products.findIndex(p=>p._id===action.payload._id)
             if(index!==-1){
                 state.products[index] = action.payload
             }
-            if(state.currentProduct?.id===action.payload.id){
+            if(state.currentProduct?._id===action.payload._id){
                 state.currentProduct = action.payload
             }
         })
@@ -175,9 +177,9 @@ const productSlice = createSlice({
         })
         .addCase(removeProduct.fulfilled,(state,action)=>{
             state.loading= false
-            state.products = state.products.filter(p=>p.id!==action.payload.id)
+            state.products = state.products.filter(p=>p._id!==action.payload._id)
 
-            if(state.currentProduct?.id===action.payload.id){
+            if(state.currentProduct?._id===action.payload._id){
                 state.currentProduct = null
             }
         })
