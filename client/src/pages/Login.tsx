@@ -294,7 +294,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-       
+
 
       {/* About Us Section */}
       <section className="py-16 bg-gray-900 text-white mt-16">
