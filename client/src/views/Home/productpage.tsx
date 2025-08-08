@@ -12,6 +12,7 @@ const Productpage = () => {
     useEffect(()=>{
         if(id){
             dispatch(fetchProductById(id))
+            
             }
     },[id])
 
