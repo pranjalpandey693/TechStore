@@ -12,7 +12,7 @@ const Productpage = () => {
     useEffect(()=>{
         if(id){
             dispatch(fetchProductById(id))
-            
+
             }
     },[id])
 
@@ -23,5 +23,7 @@ const Productpage = () => {
     </div>
   );
 }
+
+
 
 export default Productpage;
