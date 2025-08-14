@@ -3,6 +3,7 @@ import paths from '@/utils/path'
 import PublicLayout from "@/layout/PublicLayout";
 import Sample from "@/pages/Login"
 import Home from "@/views/Home";
+import Productpage from "@/views/Home/productpage";
 
 
 const HomeRoutes:RouteObject[]=[
@@ -30,7 +31,7 @@ const HomeRoutes:RouteObject[]=[
             },
             {
                 path:paths.home.PRODUCT,
-                element:'product'
+                element:<Productpage/>
             },
             {
                 path:paths.home.CHECKOUT,
