@@ -1,7 +1,9 @@
 import Redis from "ioredis";
 
+const redisHost: string = process.env.REDIS_URL || "127.0.0.1"
+
 const redisClient = new Redis({
-    host: "127.0.0.1",
+    host: redisHost,
     port:6379,
 })
 

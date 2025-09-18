@@ -1,8 +1,8 @@
-PORT= 
-MONGODB_URI=
-DB_NAME=
-DB_USER=
-DB_PASS=
-JWT_SECRET=
-REFRESH_TOKEN_SERCRET=
-NODE_ENV=
+PORT=3001
+MONGODB_URI=mongodb+srv://cluster0.maauz1r.mongodb.net/
+DB_NAME=E_commerce
+DB_USER=user
+DB_PASS=user 
+JWT_SECRET=secret
+REFRESH_TOKEN_SECRET=secret
+NODE_ENV=development

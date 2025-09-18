@@ -10,7 +10,7 @@ services:
       - ./server/.env
     environment:
      NODE_ENV: production
-     REDIS_URL: redis://redis:6379
+     REDIS_URL: ecommerce_redis
     depends_on:
       - redis
 
@@ -19,6 +19,8 @@ services:
     container_name: ecommerce_frontend
     ports:
       - "80:80"
+    environment:
+    - VITE_API_URL=http://ecommerce_backend:3001
     depends_on:
       - backend
 
