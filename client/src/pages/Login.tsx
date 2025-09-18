@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Search, ShoppingCart, User, Menu, X, ChevronLeft, ChevronRight, Star, Heart, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -41,10 +41,10 @@ const HomePage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
-  const [cartCount, setCartCount] = useState(3);
+  const cartCount = 3;
   const [isAdmin] = useState(true); // Mock admin state
-  const [favorites, setFavorites] = useState(new Set());
-
+  const favorites = 0
+ 
   // Auto-advance carousel
   useEffect(() => {
     const timer = setInterval(() => {
@@ -53,23 +53,6 @@ const HomePage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const toggleFavorite = (productId) => {
-    setFavorites(prev => {
-      const newFavorites = new Set(prev);
-      if (newFavorites.has(productId)) {
-        newFavorites.delete(productId);
-      } else {
-        newFavorites.add(productId);
-      }
-      return newFavorites;
-    });
-  };
-
-  const addToCart = (product) => {
-    setCartCount(prev => prev + 1);
-    // Here you would dispatch to Redux store
-    console.log('Added to cart:', product);
-  };
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % offers.length);
@@ -79,7 +62,7 @@ const HomePage = () => {
     setCurrentSlide((prev) => (prev - 1 + offers.length) % offers.length);
   };
 
-  const renderStars = (rating) => {
+  const renderStars = (rating:number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
@@ -189,7 +172,7 @@ const HomePage = () => {
           className="flex transition-transform duration-500 ease-in-out h-full"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
-          {offers.map((offer, index) => (
+          {offers.map((offer, ) => (
             <div
               key={offer.id}
               className="w-full flex-shrink-0 relative"
@@ -262,12 +245,12 @@ const HomePage = () => {
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <button
-                      onClick={() => toggleFavorite(product.id)}
+                      
                       className="absolute top-2 right-2 p-2 rounded-full bg-white shadow-md hover:bg-gray-50 transition-colors"
                     >
                       <Heart 
                         size={16} 
-                        className={favorites.has(product.id) ? "fill-red-500 text-red-500" : "text-gray-400"} 
+                        className={favorites ? "fill-red-500 text-red-500" : "text-gray-400"} 
                       />
                     </button>
                   </div>
@@ -280,7 +263,7 @@ const HomePage = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-gray-900">${product.price}</span>
                       <button
-                        onClick={() => addToCart(product)}
+
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
                       >
                         <ShoppingBag size={16} />

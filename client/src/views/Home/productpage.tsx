@@ -7,7 +7,7 @@ import  { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-const Productpage = () => {
+const ProductPage = () => {
     const {currentProduct,loading} = useSelector((state:RootState)=>state.product)
     const {id} = useParams<{id:string}>() 
     const dispatch = useDispatch<AppDispatch>()
@@ -64,27 +64,4 @@ const Productpage = () => {
 
 
 
-export default Productpage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default ProductPage
