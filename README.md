@@ -42,7 +42,7 @@ This app allows users to browse products, add to cart, checkout, and manage orde
    cd <repo-folder>
 
 2. Set up .env:
-- copy sample .env.txt as .env in both frontend and backend
+- copy sample .env.txt as .env in both Frontend and Backend
 
 3. Build and run with Docker:
    ```bash
