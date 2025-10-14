@@ -4,6 +4,7 @@ import PublicLayout from "@/layout/PublicLayout";
 import Sample from "@/pages/Login"
 import Home from "@/views/Home";
 import ProductPage from '@/views/Home/ProductPage'
+import Contact from "@/views/Contact/Contact_Us";
 
 
 const HomeRoutes:RouteObject[]=[
@@ -23,7 +24,7 @@ const HomeRoutes:RouteObject[]=[
             },
             {
                 path:paths.home.CONTACT,
-                element:'contact'
+                element:<Contact/>
             },
             {
                 path:paths.home.ORDERS,
