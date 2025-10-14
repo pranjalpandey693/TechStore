@@ -47,7 +47,7 @@ const Navigationbar:React.FC = () => {
         <div className='hidden md:flex items-center space-x-8'>
          
             <Link to="/orders" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Orders</Link>
-            <Link to="/test" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Contact Us</Link>
+            <Link to="/contact" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Contact Us</Link>
             {User.user?.isadmin && (
                 <Link to="manageProducts" className='text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors'>Manage Products</Link>
             )}
