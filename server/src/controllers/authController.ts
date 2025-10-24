@@ -7,10 +7,11 @@ import {  JwtPayload } from "../interfaces";
 
 export const register = async (req: Request, res: Response) => {
   const { name, email, password,role } = req.body;
-  const isadmin = role==="admin" 
+  const userRole = role || "customer"
+  const isadmin = userRole==="admin" 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await User.create({ name, email, password: hashedPassword ,role,isadmin});
+  const user = await User.create({ name, email, password: hashedPassword ,role:userRole,isadmin});
   res.status(201).json(user);
 };
 
