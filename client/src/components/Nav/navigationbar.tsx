@@ -18,16 +18,19 @@ const Navigationbar:React.FC = () => {
         dispatch(setSearchTerm(e.target.value))
     }
     const navigate = useNavigate()
-    const hadleLogin = ()=>{
+    const handleLogin = ()=>{
        navigate('/auth/login')
     }
     const handleRegister = ()=>{
       navigate('/auth/register')
     }
-    const hadleLogout = ()=>{
+    const handleLogout = ()=>{
       dispatch(logoutUser())
        navigate('/auth/login')
       
+    }
+    const handleCart = ()=>{
+          navigate('/cart')
     }
       const handleTechStore =()=>{
         navigate('/')
@@ -67,13 +70,13 @@ const Navigationbar:React.FC = () => {
 
         <div className='hidden md:flex items-center space-x-4'>
         {!User.isAuthenticated&&(
-            <button onClick={hadleLogin} className='text-gray-700 hover:text-blue-600 p-2 rounded-lg hover:bg-gray-100 transition-colors'>
+            <button onClick={handleLogin} className='text-gray-700 hover:text-blue-600 p-2 rounded-lg hover:bg-gray-100 transition-colors'>
             <UserIcon className=''size={20}/>
             <span className=' text-sm'>Login</span>
           </button>
         )}
          {User.isAuthenticated&&(
-           <button onClick={hadleLogout} className='text-gray-700 hover:text-blue-600 p-2 rounded-lg hover:bg-gray-100 transition-colors'>
+           <button onClick={handleLogout} className='text-gray-700 hover:text-blue-600 p-2 rounded-lg hover:bg-gray-100 transition-colors'>
             <UserIcon className=''size={20}/>
             <span className=' text-sm'>Logout</span>
           </button>
@@ -83,7 +86,7 @@ const Navigationbar:React.FC = () => {
             <span className=' text-sm'>Register</span>
           </button>
           )}
-          <button className=' text-gray-700 hover:text-blue-600 p-2 rounded-lg  hover:bg-gray-100 transition-colors'>
+          <button onClick={handleCart} className=' text-gray-700 hover:text-blue-600 p-2 rounded-lg  hover:bg-gray-100 transition-colors'>
              <ShoppingCart size={20}/>
           </button>
          </div>
