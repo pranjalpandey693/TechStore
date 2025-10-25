@@ -27,7 +27,7 @@ export const login = async (req: Request, res: Response) => {
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || "", {
     expiresIn: "1d",
   })
-  const refreshToken = jwt.sign({ id: user.id }, process.env.REFRESH_TOKEN_SERCRET || "", {
+  const refreshToken = jwt.sign({ id: user.id }, process.env.REFRESH_TOKEN_SECRET || "", {
     expiresIn: "1d",
   })
   await User.findByIdAndUpdate(user.id,{refreshToken})
@@ -44,8 +44,12 @@ export const login = async (req: Request, res: Response) => {
     maxAge:1*24*60*60*1000
   });
   res.json({user:user,message:"Logged in successfully"})}
-  catch(error){
-      res.status(500).json({error:"internal server error"})
+  catch(error:unknown){
+      if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Unknown error occurred" });
+    }
   }
 };
 
