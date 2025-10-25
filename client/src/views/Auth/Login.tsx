@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader,CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const loginSchema = z.object({
     email:z.email("Invalid email"),
@@ -21,6 +21,8 @@ type LoginForm = z.infer<typeof loginSchema>
 const Login: React.FC = ()=>{
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from || '/'
     const {isLoggingIn} = useSelector((state:RootState)=>state.auth)
      const {
         register,
@@ -33,7 +35,7 @@ const Login: React.FC = ()=>{
      const onSubmit = async (data:LoginForm)=>{
         try {
        await dispatch(loginUser(data)).unwrap()
-       navigate('/')
+       navigate(from)
                     
         } catch (error) {
             
