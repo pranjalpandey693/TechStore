@@ -3,6 +3,6 @@ export  interface User  {
     email: string;
     password?: string;
     isadmin: boolean;
-    role?:string
+    role?:"admin"| "seller" | "customer"
     refreshToken?:string
   }
