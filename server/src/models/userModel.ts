@@ -6,7 +6,7 @@ const UserSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   isadmin: { type: Boolean, default: false },
-  role:{type:String,default:"user"},
+  role:{type:String,},
   refreshToke:{type:String,default:null}
 
 });
