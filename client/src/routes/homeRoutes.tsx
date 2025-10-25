@@ -5,6 +5,7 @@ import Sample from "@/pages/Login"
 import Home from "@/views/Home";
 import ProductPage from '@/views/Home/ProductPage'
 import Contact from "@/views/Contact/Contact_Us";
+import ProtectedRoute from "./ProtectedRoutes";
 
 
 const HomeRoutes:RouteObject[]=[
@@ -26,17 +27,25 @@ const HomeRoutes:RouteObject[]=[
                 path:paths.home.CONTACT,
                 element:<Contact/>
             },
-            {
-                path:paths.home.ORDERS,
-                element:'ORDERS'
-            },
+        
             {
                 path:paths.home.PRODUCT,
                 element:<ProductPage/>
             },
+           
             {
-                path:paths.home.CHECKOUT,
-                element:'CHECKOUT'
+                element:<ProtectedRoute allowedRoles={["admin","seller","customer"]} />,
+                children:[
+                    {
+                        path:paths.home.ORDERS,
+                        element:'ORDERS'
+                    },
+                    {
+                        path:paths.home.CHECKOUT,
+                        element:'CHECKOUT'
+                    }
+
+                ]
             }
         ]
     },
@@ -45,9 +54,15 @@ const HomeRoutes:RouteObject[]=[
         element:<PublicLayout/>,
         children:[
             {
+                element:<ProtectedRoute allowedRoles={["admin","seller","customer"]} />,
+                children:[
+                     {
                 index:true,
                 element:'cart'
             }
+                ]
+            }
+           
         ]
 
     }
