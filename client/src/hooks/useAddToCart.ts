@@ -24,7 +24,7 @@ export const useAddToCart = () => {
     price,
   }: AddToCartProps) => {
     if (!isAuthenticated) {
-      toast.warning("Please login to add items to your cart");
+      toast.warning("Please Login to add items to your cart");
       navigate("/auth/login", { state: { from: location.pathname } });
       return;
     }
