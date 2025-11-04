@@ -3,23 +3,7 @@ import { Product } from "../models";
 import { FilterQuery } from "mongoose";
 import { IProduct } from "../interfaces";
 
-// export const getProducts = async (_req: Request, res: Response) => {
-//   try {
-//     const products = await Product.find();
 
-//     const formattedProducts = products.map((product)=>({
-//         _id: product.id,
-//         name: product.name,
-//         price:product.price,
-//         description: product.description,
-//         stock:product.stock,
-//         image: product.image ? `data:image/png;base64,${product.image.toString("base64")}` :null
-//     }))
-//     res.status(200).json(formattedProducts);
-//   } catch (error) {
-//    res.status(500).json({message: "Failed to fetch products"})
-//   }
-// };
 
 export const getProducts = async (req:Request,res: Response) =>{
     try {
