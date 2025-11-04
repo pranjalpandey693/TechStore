@@ -33,6 +33,5 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart",cartRoutes)
 
-//const PORT = process.env.PORT || 3001;
 
 export default app;
