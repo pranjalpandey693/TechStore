@@ -1,183 +1,200 @@
-import { Request,Response } from "express"
-import { deleteCartFromRedis, getCartFormRedis, saveCartRedis, syncCartToMongoDB } from "../utils"
-import { CART_ITEM_STATUS, IUser, RedisCart,RedisCartItem } from "../interfaces"
-import { Document } from "mongoose"
-import { Cart } from "../models"
+import { Request, Response } from "express";
+import {
+  deleteCartFromRedis,
+  getCartFormRedis,
+  saveCartRedis,
+  syncCartToMongoDB,
+} from "../utils";
+import {
+  CART_ITEM_STATUS,
+  IUser,
+  RedisCart,
+  RedisCartItem,
+} from "../interfaces";
+import { Document } from "mongoose";
+import { Cart } from "../models";
 
 interface AuthRequest extends Request {
-    user?: IUser & Document
+  user?: IUser & Document;
 }
 
-
-export const getCart = async(req:AuthRequest,res:Response)=>{
-    const userId = req.user?._id?.toString()
-    if (!userId) {
-        res.status(400).json({ message: "User ID is required" });
-        return
-      }
-    try {
-        const cart : RedisCart = await getCartFormRedis(userId)
-        if(!cart){
-            res.status(404).json({message: "Cart not found "})
-            return
-        }
-        res.json(cart)
-    } catch (error) {
-        res.status(500).json({error: (error as Error).message })
+export const getCart = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?._id?.toString();
+  if (!userId) {
+    res.status(400).json({ message: "User ID is required" });
+    return;
+  }
+  try {
+    const cart: RedisCart = await getCartFormRedis(userId);
+    if (!cart) {
+      res.status(404).json({ message: "Cart not found " });
+      return;
     }
-}
+    res.json(cart);
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
 
+export const addToCart = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?._id?.toString();
+  if (!userId) {
+    res.status(400).json({ message: "User ID is required" });
+    return;
+  }
+  const { productId, name, quantity, price } = req.body;
+  if (!productId) {
+    res.status(400).json({ message: "Product ID missing" });
+    return;
+  }
+  try {
+    let cart: RedisCart = (await getCartFormRedis(userId)) || { products: [] };
 
-export const addToCart = async(req:AuthRequest,res:Response)=>{
-
-    const userId = req.user?._id?.toString()
-    if (!userId) {
-        res.status(400).json({ message: "User ID is required" });
-        return
-      }
-    const {product,name,quantity,price} = req.body
-
-    try {
-        let cart:RedisCart = await getCartFormRedis(userId) || {products:[]}
-
-        const itemIndex = cart.products.findIndex((p:RedisCartItem)=> p.product === product)
-        if(itemIndex>=0){
-            cart.products[itemIndex].quantity += quantity
-            cart.products[itemIndex].totalprice = cart.products[itemIndex].quantity * price
-        } else {
-            cart.products.push({
-                product,
-                name,
-                quantity,
-                price,
-                totalprice : quantity*price,
-                status: CART_ITEM_STATUS.Not_processed
-            })
-        }
-       const totalCartPrice = cart.products.reduce((acc,item)=> acc+item.totalprice,0)
-
-       const updatedCart = {
-        ...cart,
-       totalCartPrice: totalCartPrice,
-       }
-
-        await saveCartRedis(userId,updatedCart)
-        res.json({message:"Product added to cart",updatedCart})
-        
-    } catch (error) {
-        res.status(500).json({ error: (error as Error).message })
+    const itemIndex = cart.products.findIndex(
+      (p: RedisCartItem) => p?.product?.toString() === productId?.toString()
+    );
+    if (itemIndex >= 0) {
+      cart.products[itemIndex].quantity += quantity;
+      cart.products[itemIndex].totalprice =
+        cart.products[itemIndex].quantity * price;
+    } else {
+      cart.products.push({
+        product: productId,
+        name,
+        quantity,
+        price,
+        totalprice: quantity * price,
+        status: CART_ITEM_STATUS.Not_processed,
+      });
     }
-}
+    const totalCartPrice = cart.products.reduce(
+      (acc, item) => acc + item.totalprice,
+      0
+    );
 
-export const updateCart = async (req:AuthRequest,res:Response)=>{
-    const userId = req.user?._id?.toString()
-    if (!userId) {
-        res.status(400).json({ message: "User ID is required" });
-        return
-      }
-     const {productId} = req.params
-     const {quantity} = req.body
+    const updatedCart = {
+      ...cart,
+      totalCartPrice: totalCartPrice,
+    };
 
-     try {
-        const cart : RedisCart = await getCartFormRedis(userId)
-        if(!cart){
-             res.status(404).json({message: "Cart not found "})
-             return
-        }
+    await saveCartRedis(userId, updatedCart);
+    res.json({ message: "Product added to cart", updatedCart });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
 
-        const item = cart.products.find((p)=>p.product===productId)
-        if(!item){
-             res.status(404).json({message: "Product not found in Cart "})
-             return
-        }
+export const updateCart = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?._id?.toString();
+  if (!userId) {
+    res.status(400).json({ message: "User ID is required" });
+    return;
+  }
+  const { productId } = req.params;
+  const { quantity } = req.body;
 
-        item.quantity = quantity
-        item.totalprice = quantity* item.price
-
-        const totalCartPrice = cart.products.reduce((acc,item)=> acc+item.totalprice,0)
-
-       const updatedCart = {
-        ...cart,
-       totalCartPrice: totalCartPrice,
-       }
-
-        
-
-        await saveCartRedis(userId,updatedCart)
-
-        res.json({message:"Cart item updated", updatedCart})
-    } catch (error) {
-        res.status(500).json({error: (error as Error).message })
+  try {
+    const cart: RedisCart = await getCartFormRedis(userId);
+    if (!cart) {
+      res.status(404).json({ message: "Cart not found " });
+      return;
     }
-     
 
-}
-
-export const removeFromCart = async (req:AuthRequest,res:Response)=>{
-    const userId = req.user?._id?.toString()
-    if (!userId) {
-        res.status(400).json({ message: "User ID is required" });
-        return
-      }
-    const {productId}= req.params
-
-    try {
-       let cart:RedisCart = await getCartFormRedis(userId)
-       if(!cart) {
-        res.status(404).json({message: "Cart not found"})
-        return
-       }
-
-       cart.products = cart.products.filter((p:RedisCartItem)=> p.product!== productId)
-       cart.totalCartPrice = cart.products.reduce((acc,item)=> acc+item.totalprice,0)
-       await saveCartRedis(userId,cart)
-       const updatedCart = cart
-      
-       res.json({message: "Product removed",updatedCart})
-    } catch (error) {
-        res.status(500).json({ error: (error as Error).message })
+    const item = cart.products.find((p) => p.product === productId);
+    if (!item) {
+      res.status(404).json({ message: "Product not found in Cart " });
+      return;
     }
-}
 
-export const checkoutCart = async (req:AuthRequest,res:Response) =>{
-   
-    const userId = req.user?._id?.toString()
-    if (!userId) {
-        res.status(400).json({ message: "User ID is required" });
-        return
-      }
-    try {
-        await syncCartToMongoDB(userId)
-        res.json({ message: "Cart checked out and saved to DB." })
-    } catch (error) {
-        res.status(500).json({ error: (error as Error).message })
-        
+    item.quantity = quantity;
+    item.totalprice = quantity * item.price;
+
+    const totalCartPrice = cart.products.reduce(
+      (acc, item) => acc + item.totalprice,
+      0
+    );
+
+    const updatedCart = {
+      ...cart,
+      totalCartPrice: totalCartPrice,
+    };
+
+    await saveCartRedis(userId, updatedCart);
+
+    res.json({ message: "Cart item updated", updatedCart });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const removeFromCart = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?._id?.toString();
+  if (!userId) {
+    res.status(400).json({ message: "User ID is required" });
+    return;
+  }
+  const { productId } = req.params;
+
+  try {
+    let cart: RedisCart = await getCartFormRedis(userId);
+    if (!cart) {
+      res.status(404).json({ message: "Cart not found" });
+      return;
     }
-}
 
-export const clearCart = async(req:AuthRequest,res:Response)=>{
-    const userId = req.user?._id?.toString()
-    if (!userId) {
-        res.status(400).json({ message: "User ID is required" });
-        return
-      }
-    try {
-        const cart : RedisCart = await getCartFormRedis(userId)
-        const mongoCart = await Cart.findOne({user:userId})
-        if(!cart && !mongoCart){
-             res.status(404).json({message: "Cart not found "})
-             return
-        }
-       
-        await deleteCartFromRedis(userId)
-        await Cart.deleteMany({ user: userId });
+    cart.products = cart.products.filter(
+      (p: RedisCartItem) => p.product !== productId
+    );
+    cart.totalCartPrice = cart.products.reduce(
+      (acc, item) => acc + item.totalprice,
+      0
+    );
+    await saveCartRedis(userId, cart);
+    const updatedCart = cart;
 
-        cart.products = []
-        cart.totalCartPrice = 0
-        const updatedCart = cart
-        
-        res.json({message:"Cart cleared", updatedCart})
-    } catch (error) {
-        res.status(500).json({error: (error as Error).message })
+    res.json({ message: "Product removed", updatedCart });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const checkoutCart = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?._id?.toString();
+  if (!userId) {
+    res.status(400).json({ message: "User ID is required" });
+    return;
+  }
+  try {
+    await syncCartToMongoDB(userId);
+    res.json({ message: "Cart checked out and saved to DB." });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const clearCart = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?._id?.toString();
+  if (!userId) {
+    res.status(400).json({ message: "User ID is required" });
+    return;
+  }
+  try {
+    const cart: RedisCart = await getCartFormRedis(userId);
+    const mongoCart = await Cart.findOne({ user: userId });
+    if (!cart && !mongoCart) {
+      res.status(404).json({ message: "Cart not found " });
+      return;
     }
-}
+
+    await deleteCartFromRedis(userId);
+    await Cart.deleteMany({ user: userId });
+
+    cart.products = [];
+    cart.totalCartPrice = 0;
+    const updatedCart = cart;
+
+    res.json({ message: "Cart cleared", updatedCart });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
