@@ -1,4 +1,4 @@
-import type { CartItem, CartState, ServerCartResponse } from "@/interfaces";
+import type {  CartState, ServerCartResponse } from "@/interfaces";
 import { cartApiService} from "@/services/cartService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "sonner";
@@ -136,45 +136,6 @@ const restoreFromBackup = (state:CartState)=>{
     }
 }
 
-const applyOptimisticAdd = (state:CartState,productId:string,quantity:number,estimatedPrice=0)=>{
-    const existingIndex = state.items.findIndex(item =>item.productId===productId)
-
-    if(existingIndex!==-1){
-        const existingItem = state.items[existingIndex]
-        existingItem.quantity += quantity
-        state.totalAmount += existingItem.price * quantity
-    } else {
-        const newItem :CartItem ={
-            productId:productId,
-            name:"Loading...",
-            quantity,
-            price:estimatedPrice,
-            status:"Not_processed"
-        }
-        state.items.push(newItem)
-        state.totalAmount+= estimatedPrice * quantity
-    }
-}
-
-const applyOptimisticRemove = (state:CartState, productId:string)=>{
-    const index = state.items.findIndex(item => item.productId === productId)
-    if(index !==-1){
-        const item = state.items[index]
-        state.totalAmount -= item.quantity * item.price
-        state.items.splice(index,1)
-    }
-}
-
-const applyOptimisticQuantityUpdate = (state:CartState,productId:string,newQuantity: number)=>{
-    const index = state.items.findIndex(item => item.productId === productId)
-    if(index !== -1){
-        const item = state.items[index]
-        const oldTotal = item.price * item.quantity
-        item.quantity = newQuantity
-        state.totalAmount = state.totalAmount - oldTotal + (item.price * item.quantity)
-    }
-}
-
 
 const CartSlice = createSlice({
     name:"cart",
@@ -207,13 +168,12 @@ const CartSlice = createSlice({
          })
 
          builder
-         .addCase(addItemCart.pending,(state,action)=>{
+         .addCase(addItemCart.pending,(state)=>{
             state.isAdding = true
             state.error =null
             state.previousState = createBackupstate(state)
 
-            const {productId, quantity}=action.meta.arg
-            applyOptimisticAdd(state,productId,quantity)
+           
          })
          .addCase(addItemCart.fulfilled,(state,action)=>{
             state.isAdding = false 
@@ -226,13 +186,13 @@ const CartSlice = createSlice({
          })
 
          builder
-         .addCase(removeItemCart.pending, (state,action)=>{
+         .addCase(removeItemCart.pending, (state)=>{
             state.isRemoving= true
             state.error = null
             state.previousState = createBackupstate(state)
 
-            const productId = action.meta.arg
-            applyOptimisticRemove(state,productId)
+
+
          })
          .addCase(removeItemCart.fulfilled,(state,action)=>{
             state.isRemoving = false
@@ -247,13 +207,13 @@ const CartSlice = createSlice({
          })
 
          builder
-         .addCase(updateCartItem.pending,(state,action)=>{
+         .addCase(updateCartItem.pending,(state)=>{
             state.isUpdating = true
             state.error = null
             state.previousState = createBackupstate(state)
 
-            const {productId,quantity}= action.meta.arg
-            applyOptimisticQuantityUpdate(state,productId,quantity)
+
+
          })
          .addCase(updateCartItem.fulfilled,(state,action)=>{
               state.isUpdating = false
