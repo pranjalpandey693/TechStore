@@ -1,20 +1,25 @@
 import { useAddToCart } from "@/hooks/useAddToCart";
 import type { Product } from "@/interfaces";
 import { ShoppingBag } from "lucide-react";
+import type React from "react";
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const arg = {
-    productId: product._id,
-    name: product.name,
-    quantity: 1,
-    price: product.price,
-  };
-
   const { handleAddToCart } = useAddToCart();
+
+  const onAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleAddToCart({
+      productId: product._id,
+      name: product.name,
+      quantity: 1,
+      price: product.price,
+    });
+  };
 
   return (
     <div className="bg-white p-2 border rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow group ">
@@ -32,7 +37,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             ₹{product.price}
           </span>
           <button
-            onClick={() => handleAddToCart(arg)}
+            onClick={onAdd}
             className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center px-4 py-2"
           >
             <ShoppingBag size={16} /> Add to Cart
