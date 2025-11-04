@@ -10,11 +10,7 @@ const useAuthInitializer = () => {
        
     useEffect(()=>{
        const initializeAuth = async ()=>{
-        const token = localStorage.getItem('token')
-
-        if(!token){
-            return
-        }
+       
 
         try {
             await dispatch(getCurrentUser()).unwrap()
@@ -24,7 +20,7 @@ const useAuthInitializer = () => {
                 await dispatch(refreshToken()).unwrap()
                 await dispatch(getCurrentUser()).unwrap()
             } catch (refreshError) {
-                dispatch(logoutUser()).unwrap()
+                dispatch(logoutUser())
             }
         }
        }
