@@ -35,7 +35,7 @@ const Login: React.FC = ()=>{
      const onSubmit = async (data:LoginForm)=>{
         try {
        await dispatch(loginUser(data)).unwrap()
-       navigate(from)
+       navigate(from,{replace:true})
                     
         } catch (error) {
             
