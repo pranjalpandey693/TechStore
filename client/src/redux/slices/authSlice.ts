@@ -53,7 +53,7 @@ export const registerUser = createAsyncThunk(
 );
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
-  async (_, { dispatch, rejectWithValue, getState }) => {
+  async ({silent}:{silent?: boolean}= {}, { dispatch, rejectWithValue, getState }) => {
     try {
       const state = getState() as { auth: AuthState };
       if (state.auth.isAuthenticated) {
@@ -61,11 +61,11 @@ export const logoutUser = createAsyncThunk(
       }
       sessionStorage.clear();
       dispatch(resetCart());
-      toast.success("Logged out successful!");
+     if(!silent) toast.success("Logged out successful!");
       return true;
     } catch (error: any) {
       sessionStorage.clear();
-      toast.error(
+     if(!silent) toast.error(
         error.response?.data?.message || "Logout completed with errors"
       );
       return rejectWithValue(error.response?.data?.message || "logout failed");

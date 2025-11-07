@@ -14,18 +14,18 @@ const useAuthInitializer = () => {
 
   useEffect(() => {
     const initializeAuth = async () => {
+        dispatch(fetchProducts({}))
       try {
         await dispatch(getCurrentUser()).unwrap();
 
-        dispatch(fetchProducts({})).unwrap();
 
-        dispatch(fetchCart()).unwrap();
+        dispatch(fetchCart())
       } catch (error) {
         try {
           await dispatch(refreshToken()).unwrap();
           await dispatch(getCurrentUser()).unwrap();
         } catch (refreshError) {
-          dispatch(logoutUser());
+          dispatch(logoutUser({silent:true}));
         }
       }
     };

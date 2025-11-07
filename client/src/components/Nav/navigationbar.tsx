@@ -23,7 +23,7 @@ const Navigationbar: React.FC = () => {
     navigate("/auth/register");
   };
   const handleLogout = () => {
-    dispatch(logoutUser());
+    dispatch(logoutUser({}));
     navigate("/auth/login");
   };
   const handleCart = () => {
