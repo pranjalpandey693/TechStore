@@ -49,7 +49,7 @@ const ProductPage = () => {
           />
 
           <button
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 flex items-center mt-4 gap-2 "
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 flex items-center mt-4 rounded-md gap-2 "
             onClick={() =>
               handleAddToCart({
                 productId: currentProduct._id,

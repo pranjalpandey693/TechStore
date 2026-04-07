@@ -24,6 +24,7 @@ const useAuthInitializer = () => {
         try {
           await dispatch(refreshToken()).unwrap();
           await dispatch(getCurrentUser()).unwrap();
+          dispatch(fetchCart());
         } catch (refreshError) {
           dispatch(logoutUser({silent:true}));
         }
@@ -33,4 +34,4 @@ const useAuthInitializer = () => {
   }, [dispatch]);
 };
 
-export default useAuthInitializer;
+  export default useAuthInitializer;

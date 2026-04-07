@@ -7,11 +7,12 @@ import type {
 } from "@/interfaces";
 import { authApiService } from "@/services/authService";
 import { toast } from "sonner";
-import { resetCart } from "@/redux/slices/CartSlice";
+import { fetchCart, resetCart } from "@/redux/slices/CartSlice";
 
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
+  isAuthInitialized: false,
   isLoggingIn: false,
   isRegistering: false,
   isLoggingOut: false,
@@ -23,9 +24,10 @@ const initialState: AuthState = {
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
-  async (credentials: LoginCredentials, { rejectWithValue }) => {
+  async (credentials: LoginCredentials, { dispatch, rejectWithValue }) => {
     try {
       const response = await authApiService.loginUser(credentials);
+      dispatch(fetchCart());
 
       toast.success("Login successful!");
       return { user: response.data.user };
@@ -46,8 +48,10 @@ export const registerUser = createAsyncThunk(
     } catch (error: any) {
       toast.error(error.response?.data?.message || "registration failed");
       return rejectWithValue(
-        error.response?.data?.message || "registration failed"
-      );
+       error.response?.data?.message || "registration failed"
+     );
+
+   
     }
   }
 );
@@ -78,7 +82,8 @@ export const refreshToken = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await authApiService.refreshToken();
-      return { user: response.data.user };
+      const user = response.data?.user ?? response.data;
+      return { user };
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || "token refresh failed"
@@ -91,7 +96,8 @@ export const getCurrentUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await authApiService.getCurrentUser();
-      return { user: response.data.user };
+      const user = response.data?.user ?? response.data;
+      return { user };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || "User not found");
     }
@@ -101,10 +107,12 @@ export const getCurrentUser = createAsyncThunk(
 const setAuthSuccess = (state: AuthState, user: User) => {
   state.user = user;
   state.isAuthenticated = true;
+  state.isAuthInitialized = true;
 };
 const resetAuthState = (state: AuthState) => {
   state.user = null;
   state.isAuthenticated = false;
+  state.isAuthInitialized = true;
 };
 
 const authSlice = createSlice({
@@ -191,6 +199,7 @@ const authSlice = createSlice({
         state.isGettingUser = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
+        state.isAuthInitialized = true;
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.isGettingUser = false;

@@ -4,6 +4,7 @@ import PublicLayout from "@/layout/PublicLayout";
 import Sample from "@/pages/Login"
 import Home from "@/views/Home";
 import ProductPage from '@/views/Home/ProductPage'
+import CartPage from "@/views/Home/cart";
 import Contact from "@/views/Contact/Contact_Us";
 import ProtectedRoute from "./ProtectedRoutes";
 
@@ -58,7 +59,7 @@ const HomeRoutes:RouteObject[]=[
                 children:[
                      {
                 index:true,
-                element:'cart'
+                element:<CartPage/>
             }
                 ]
             }

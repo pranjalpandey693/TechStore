@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Search, User as UserIcon, ShoppingCart, Menu, X } from "lucide-react";
 import { type AppDispatch, type RootState } from "@/redux/store";
 import { setSearchTerm } from "@/redux/slices/searchslice";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoutUser } from "@/redux/slices/authSlice";
 
 const Navigationbar: React.FC = () => {
@@ -11,6 +11,8 @@ const Navigationbar: React.FC = () => {
   const search = useSelector((state: RootState) => state.search.searchterm);
   const User = useSelector((state: RootState) => state.auth);
   const itemCount = useSelector((state: RootState) => state.cart.items.length);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   const handlechange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setSearchTerm(e.target.value));
@@ -38,7 +40,7 @@ const Navigationbar: React.FC = () => {
   return (
     <nav className="sticky top-0 z-50 bg-gray-100 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex items-center h-16">
           <div className="flex-shrink-0 flex items-center">
             <button
               onClick={handleTechStore}
@@ -48,7 +50,7 @@ const Navigationbar: React.FC = () => {
             </button>
           </div>
 
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-8 ml-8">
             <Link
               to="/orders"
               className="text-gray-700 hover:text-blue-600 px-3 font-medium transition-colors"
@@ -71,20 +73,22 @@ const Navigationbar: React.FC = () => {
             )}
           </div>
 
-          <div className="hidden md:flex flex-1 max-w-lg mx-8">
-            <div className=" relative w-full">
-              <input
-                type="text"
-                value={search}
-                onChange={handlechange}
-                placeholder="Search Products..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              <Search className="absolute left-3 top-2.5  h-5 w-5 text-gray-400" />
+          {isHomePage && (
+            <div className="hidden md:flex flex-1 max-w-lg mx-8">
+              <div className=" relative w-full">
+                <input
+                  type="text"
+                  value={search}
+                  onChange={handlechange}
+                  placeholder="Search Products..."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <Search className="absolute left-3 top-2.5  h-5 w-5 text-gray-400" />
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-4 ml-auto">
             {!User.isAuthenticated && (
               <button
                 onClick={handleLogin}
@@ -138,16 +142,18 @@ const Navigationbar: React.FC = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t">
           <div className="px-4 py-2 space-y-1">
-            <div className=" relative mb-4">
-              <input
-                type="text"
-                value={search}
-                onChange={handlechange}
-                placeholder="Search Products..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
-              />
-              <Search className="absolute left-3 top-2.5  h-5 w-5 text-gray-400" />
-            </div>
+            {isHomePage && (
+              <div className=" relative mb-4">
+                <input
+                  type="text"
+                  value={search}
+                  onChange={handlechange}
+                  placeholder="Search Products..."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
+                />
+                <Search className="absolute left-3 top-2.5  h-5 w-5 text-gray-400" />
+              </div>
+            )}
 
             <Link
               to="/orders"

@@ -8,10 +8,13 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isGettingUser, isAuthInitialized, isRefreshing } =
+    useAuth();
   const toastShown = useRef(false)
-
-  if (!isAuthenticated && !user) {
+  if (!isAuthInitialized || isGettingUser || isRefreshing) {
+    return <div>Loading...</div>;
+  }
+  if (!isAuthenticated || !user) {
     return <Navigate to="/auth/login" replace />;
   }
   if (allowedRoles && !allowedRoles.includes(user!.role!)) {

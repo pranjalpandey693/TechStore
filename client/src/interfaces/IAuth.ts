@@ -1,8 +1,9 @@
 import type { User } from "./IUser"
 
-export interface AuthState {
+export interface AuthState {   
     user: User|null,
     isAuthenticated: boolean,
+    isAuthInitialized: boolean,
     isLoggingIn: boolean,
     isRegistering: boolean,
     isLoggingOut: boolean,
