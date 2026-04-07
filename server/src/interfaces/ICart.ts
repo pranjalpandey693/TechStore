@@ -11,7 +11,7 @@ export enum CART_ITEM_STATUS{
 }
 
 export interface CartItem {
-    product: Types.ObjectId
+    productId: Types.ObjectId
     name:string
     quantity: number
     price: number

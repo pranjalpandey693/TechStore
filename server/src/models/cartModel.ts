@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { CART_ITEM_STATUS, CartDocument, CartItem } from "../interfaces";
 
 const CartItemSchema = new Schema<CartItem>({
-    product: {type:Schema.Types.ObjectId, ref: "Product"},
+    productId: {type:Schema.Types.ObjectId, ref: "Product"},
     name:{type:String},
     quantity:{type: Number,default:1},
     price:{type:Number,default:0},

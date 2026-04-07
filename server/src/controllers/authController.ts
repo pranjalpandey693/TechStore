@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { User } from "../models";
 import { AuthRequest } from "../middleware/authmiddleware";
 import { JwtPayload } from "../interfaces";
+import { MongoServerError } from "mongodb";
 
 export const register = async (req: Request, res: Response) => {
   const { name, email, password, role } = req.body;
@@ -11,14 +12,26 @@ export const register = async (req: Request, res: Response) => {
   const isadmin = userRole === "admin";
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await User.create({
-    name,
-    email,
-    password: hashedPassword,
-    role: userRole,
-    isadmin,
-  });
-  res.status(201).json(user);
+  try {
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      role: userRole,
+      isadmin,
+    });
+    res.status(201).json(user);
+  } catch (error) {
+    if ( error instanceof MongoServerError && error.code ===11000) {
+  res.status(409).json({ message: "User already exists" });
+   return
+
+    }
+res.status(500).json({ message: "Error registering user" });
+return
+  }
+
+  
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -104,7 +117,7 @@ export const refreshToken = async (req: AuthRequest, res: Response) => {
 
     const decoded = jwt.verify(
       refreshToken,
-      process.env.REFRESH_TOKEN_SERCRET || ""
+      process.env.REFRESH_TOKEN_SECRET || ""
     ) as JwtPayload;
 
     const user = await User.findById(decoded.id);
@@ -121,7 +134,7 @@ export const refreshToken = async (req: AuthRequest, res: Response) => {
     });
     const newRefreshToken = jwt.sign(
       { id: user.id },
-      process.env.REFRESH_TOKEN_SERCRET || "",
+      process.env.REFRESH_TOKEN_SECRET || "",
       {
         expiresIn: "1d",
       }
@@ -149,7 +162,7 @@ export const refreshToken = async (req: AuthRequest, res: Response) => {
     });
     return;
   } catch (error) {
-    res.clearCookie("accessToken");
+    res.clearCookie("token");
     res.clearCookie("refreshToken");
 
     res.status(401).json({

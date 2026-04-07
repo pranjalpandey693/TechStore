@@ -51,7 +51,7 @@ export const addToCart = async (req: AuthRequest, res: Response) => {
     let cart: RedisCart = (await getCartFormRedis(userId)) || { products: [] };
 
     const itemIndex = cart.products.findIndex(
-      (p: RedisCartItem) => p?.product?.toString() === productId?.toString()
+      (p: RedisCartItem) => p?.productId?.toString() === productId?.toString()
     );
     if (itemIndex >= 0) {
       cart.products[itemIndex].quantity += quantity;
@@ -59,7 +59,7 @@ export const addToCart = async (req: AuthRequest, res: Response) => {
         cart.products[itemIndex].quantity * price;
     } else {
       cart.products.push({
-        product: productId,
+        productId: productId,
         name,
         quantity,
         price,
@@ -100,7 +100,7 @@ export const updateCart = async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    const item = cart.products.find((p) => p.product === productId);
+    const item = cart.products.find((p) => p.productId === productId);
     if (!item) {
       res.status(404).json({ message: "Product not found in Cart " });
       return;
@@ -143,7 +143,7 @@ export const removeFromCart = async (req: AuthRequest, res: Response) => {
     }
 
     cart.products = cart.products.filter(
-      (p: RedisCartItem) => p.product !== productId
+      (p: RedisCartItem) => p.productId !== productId
     );
     cart.totalCartPrice = cart.products.reduce(
       (acc, item) => acc + item.totalprice,

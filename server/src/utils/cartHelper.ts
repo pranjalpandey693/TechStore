@@ -44,7 +44,7 @@ export const syncCartToMongoDB = async (userId:string) =>{
         }
         
         const formattedProducts = redisCart.products.map((item:RedisCartItem)=>({
-            product: new mongoose.Types.ObjectId(item.product), 
+            productId: new mongoose.Types.ObjectId(item.productId), 
             name: item.name,
             quantity: item.quantity,
             price: item.price,

@@ -1,5 +1,5 @@
 export interface RedisCartItem {
-     product: string
+     productId: string
        name:string 
         quantity: number
         price: number
