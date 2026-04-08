@@ -4,12 +4,6 @@ interface CartItem {
   price: number;
   quantity: number;
   image?: string;
-  status:
-    | "Not_processed"
-    | "Processing"
-    | "Shipped"
-    | "Delivered"
-    | "Cancelled";
 }
 
 interface ServerCartResponse {
