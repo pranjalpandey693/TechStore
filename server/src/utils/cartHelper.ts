@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
-import { CART_ITEM_STATUS, RedisCart,RedisCartItem } from "../interfaces";
+import {  RedisCart,RedisCartItem } from "../interfaces";
 import { Cart } from "../models";
 import redisClient from "./redisClient";
 
 
-const CART_EXPIRATION = 60 * 60 * 24 
+
 
 export const saveCartRedis = async( userId: string , cart: RedisCart)=>{
-    await redisClient.setex(`cart:${userId}`,CART_EXPIRATION, JSON.stringify(cart))
+    await redisClient.set(`cart:${userId}`, JSON.stringify(cart))
 }
 
 export const getCartFormRedis = async (userId:string)=>{
@@ -49,7 +49,7 @@ export const syncCartToMongoDB = async (userId:string) =>{
             quantity: item.quantity,
             price: item.price,
             totalprice: item.totalprice,
-            status: item.status as CART_ITEM_STATUS
+            
 
         }))
         const totalCartPrice = formattedProducts.reduce((sum,item)=> sum+item.totalprice,0)

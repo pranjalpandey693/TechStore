@@ -6,7 +6,7 @@ import {
   syncCartToMongoDB,
 } from "../utils";
 import {
-  CART_ITEM_STATUS,
+
   IUser,
   RedisCart,
   RedisCartItem,
@@ -64,7 +64,7 @@ export const addToCart = async (req: AuthRequest, res: Response) => {
         quantity,
         price,
         totalprice: quantity * price,
-        status: CART_ITEM_STATUS.Not_processed,
+
       });
     }
     const totalCartPrice = cart.products.reduce(

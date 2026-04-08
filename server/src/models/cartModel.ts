@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { CART_ITEM_STATUS, CartDocument, CartItem } from "../interfaces";
+import {  CartDocument, CartItem } from "../interfaces";
 
 const CartItemSchema = new Schema<CartItem>({
     productId: {type:Schema.Types.ObjectId, ref: "Product"},
@@ -7,11 +7,7 @@ const CartItemSchema = new Schema<CartItem>({
     quantity:{type: Number,default:1},
     price:{type:Number,default:0},
     totalprice:{type:Number,default:0},
-    status:{
-        type:String,
-        enum:Object.values(CART_ITEM_STATUS),
-        default:CART_ITEM_STATUS.Not_processed
-    },
+   
 })
 
 const CartSchema = new Schema<CartDocument>({

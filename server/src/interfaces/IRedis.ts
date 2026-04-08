@@ -4,7 +4,7 @@ export interface RedisCartItem {
         quantity: number
         price: number
         totalprice: number
-        status: string
+       
 }
 
 export interface RedisCart {
